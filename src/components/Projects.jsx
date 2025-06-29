@@ -54,7 +54,7 @@ function Project() {
     selectedCategory === "All"
       ? projects
       : projects.filter((project) =>
-          project.category.include(selectedCategory)
+          project.category?.includes(selectedCategory)
         );
 
   return (
