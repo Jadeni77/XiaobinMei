@@ -1,10 +1,22 @@
-import React from "react";
+import VscodeIcon from "../assets/icons/vscode.png";
+import EclipseIcon from "../assets/icons/eclipse.png";
+import IntellJIcon from "../assets/icons/intellij.png"
+import GitIcon from "../assets/icons/git.png"
+import GithubIcon from "../assets/icons/github.png"
 
 function Skill() {
   const technicalSkills = [
     { name: "HTML", level: 6 },
     { name: "Java", level: 60 },
   ];
+
+  const tools = [
+  { name: "VS Code", icon: VscodeIcon },
+  { name: "Eclipse", icon: EclipseIcon },
+  { name: "IntelliJ IDEA", icon: IntellJIcon },
+  { name: "Git", icon: GitIcon },
+  { name: "GitHub", icon: GithubIcon },
+];
 
   const otherSkills = ["UI/UX Design", "Git & Github", "Testing"];
 
@@ -55,14 +67,15 @@ function Skill() {
             <div className="tools-section">
               <h3>Tools & Technologies</h3>
               <div className="tools-grid">
-                {["VS Code", "Eclipse", "IntellJ IDE", "Git", "Github"].map(
-                  (tool, index) => (
+                {tools.map((tool, index) => (
                     <div className="tool-item" key={index}>
-                      <div className="tool-icon"></div>
-                      <span>{tool}</span>
-                    </div>
-                  )
-                )}
+                        <img src={tool.icon} className="tool-icon"/>
+                        <span>{tool.name}</span>
+                        </div>
+                ))}
+                
+
+
               </div>
             </div>
           </div>
