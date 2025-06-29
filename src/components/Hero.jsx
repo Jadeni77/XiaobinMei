@@ -16,7 +16,7 @@ function Hero() {
             passinate about clean code and intuitive user experiences.
           </p>
 
-          <div className="here-button">
+          <div className="hero-buttons">
             <a href="#projects" className="btn btn-primary">
               View My Work
             </a>
