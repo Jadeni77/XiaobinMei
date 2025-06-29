@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ProjectCard from "./ProjectCard";
 import CalendarImage from "../assets/projectimage/calendar.png";
 import MyWeb from "../assets/projectimage/myweb.png";
+import NEUBookstore from "../assets/projectimage/bookstore.png";
 
 function Project() {
   const category = ["All", "Web", "Game Development", "Coursework Projects"];
@@ -14,7 +15,7 @@ function Project() {
         "Built in Java for the Object-Oriented Design course. This" +
         "GUI-based calendar supports viewing, creating, and editing events using" +
         "the Java Swing library.",
-      category: "Coursework Projects",
+      category: ["Coursework Projects", "Web"],
       technologies: ["Java", "Git", "Github", "Swing"],
       course: "Object-Oriented Design (CS 3500)",
       github:
@@ -28,10 +29,10 @@ function Project() {
       description:
         "A web application that allows users to browse, filter and manage" +
         "book listings. Built with a focus on frontend design and interactivity using React.js.",
-      category: "Web",
+      category: ["Web"],
       technologies: ["React.js", "Python", "Git", "Github"],
       github: "https://github.com/oasis-2025-charles-alpha/app",
-      projectImage: "",
+      projectImage: NEUBookstore,
     },
 
     {
@@ -40,19 +41,21 @@ function Project() {
       description:
         "A responsive website built with React.js to showccase my projects" +
         "skills, and contact information. It features smooth navigation, and project filtering.",
-      category: "Web",
+      category: ["Web"],
       technologies: ["React.js", "Git", "Github"],
       github: "https://github.com/Jadeni77/myWeb",
       projectImage: MyWeb,
     },
-//for further projects, just add more items inside this array
+    //for further projects, just add more items inside this array
   ];
 
   const [selectedCategory, setSelectedCategory] = useState("All");
   const filterProjects =
     selectedCategory === "All"
       ? projects
-      : projects.filter((project) => project.category === selectedCategory);
+      : projects.filter((project) =>
+          project.category.include(selectedCategory)
+        );
 
   return (
     <section id="projects" className="projects">

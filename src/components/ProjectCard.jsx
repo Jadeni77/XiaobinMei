@@ -1,31 +1,37 @@
 import React from "react";
 
 function ProjectCard({ project }) {
-  const {
-    title,
-    description,
-    category,
-    technologies,
-    course,
-    github,
-    projectImage,
-  } = project;
+  const { title, description, category, technologies, github, projectImage } =
+    project;
 
   return (
     <div className="project-card">
       <div className="project-image">
         {projectImage ? (
-        <img src={projectImage} alt={`${title} screenshot`}
-        className="project-screenshot" />) : (
-        <div className="image-placeholder">
-            <span>{category.charAt(0)}</span>
-        </div>)}
+          <img
+            src={projectImage}
+            alt={`${title} screenshot`}
+            className="project-screenshot"
+          />
+        ) : (
+          <div className="image-placeholder">
+            <span>P</span>
+          </div>
+        )}
       </div>
 
       <div className="project-content">
         <div className="project-header">
-          <span className="project-category">{category}</span>
           <h3 className="project-title">{title}</h3>
+        </div>
+
+        <div className="project-category-tags-container">
+          {Array.isArray(category) &&
+            category.map((cate, index) => (
+              <span key={index} className="project-category">
+                {cate}
+              </span>
+            ))}
         </div>
       </div>
 
@@ -50,7 +56,9 @@ function ProjectCard({ project }) {
             Github Repo
           </a>
         ) : (
-          <span className="no-link-text">Repository is private/unavailable</span>
+          <span className="no-link-text">
+            Repository is private/unavailable
+          </span>
         )}
       </div>
     </div>

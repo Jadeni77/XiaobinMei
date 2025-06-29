@@ -1,6 +1,20 @@
 import React from "react";
+import Oasis from "../assets/aboutimage/oasis.jpg";
+import LinkedIn from "../assets/aboutimage/linkedin.jpeg";
 
 function About() {
+  const images = [
+    {
+      src: LinkedIn,
+       label: "Passionate Coder",
+    },
+
+    {
+      src: Oasis,
+      label: "Oasis",
+    },
+  ];
+
   return (
     <section id="about" className="about">
       <div className="container">
@@ -10,9 +24,19 @@ function About() {
         </div>
 
         <div className="about-content">
-          <div className="about-image">
-            <div className="about-image-placeholder">...</div>
-            <div className="image-badge">Passionate Coder</div>
+          <div className="about-images">
+            {images.map((img, index) => (
+              <div key={index} className="about-profile-image-container">
+                <div className="badge-wrapper"> {/* Wrapper Use: Image won't move up when empty label */}
+                  {img.label ? (
+                    <div className="badge-top">{img.label} </div>
+                  ) : null}
+                </div>
+                <div className="profile-image">
+                  <img src={img.src} alt={`Xiaobin Mei ${index + 1}`} />
+                </div>
+              </div> //
+            ))}
           </div>
         </div>
 

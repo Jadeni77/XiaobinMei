@@ -1,4 +1,5 @@
 import React from "react";
+import LinkedIn from "../assets/aboutimage/linkedin.jpeg";
 
 function Hero() {
   return (
@@ -29,7 +30,7 @@ function Hero() {
         <div className="hero-image-container">
           <div className="hero-image">
             <div className="hero-image-linkedin">
-                <img src="https://media.licdn.com/dms/image/v2/D4D03AQGqhZ6j96dmnQ/profile-displayphoto-shrink_800_800/B4DZVtvWHkHYAc-/0/1741302883892?e=1756944000&v=beta&t=m2tPR5TXL58QibvAEbTmOnD7e4LvpzWluFpDshbb9Ao"
+                <img src={LinkedIn}
                 alt="Xiaobin Mei"
                 className="profile-image"
                 />
