@@ -8,11 +8,12 @@ function Hero() {
           <h1 className="hero-title">
             Hi, I'm <span className="highlight">Xiaobin Mei</span>
           </h1>
-          <h2 className="hero-subtitle">Frontend Developer</h2>
+          <h2 className="hero-subtitle">CS Student @ Northeastern</h2>
           <p className="hero-description">
-            I create engaging, responsive websites with modern JavaScript
-            frameworks. Passionate about clean code and intuitive user
-            experiences.
+            As a computer science student, I'm learning how to build responsive and 
+            accessible websites and user interfaces to create solutions that address
+            user needs, improve existing systems, and solve real-world problems. I'm
+            passinate about clean code and intuitive user experiences.
           </p>
 
           <div className="here-button">
@@ -27,7 +28,7 @@ function Hero() {
 
         <div className="hero-image-container">
           <div className="hero-image">
-            <div className="hero-image-placeholder">
+            <div className="hero-image-linkedin">
                 <img src="https://media.licdn.com/dms/image/v2/D4D03AQGqhZ6j96dmnQ/profile-displayphoto-shrink_800_800/B4DZVtvWHkHYAc-/0/1741302883892?e=1756944000&v=beta&t=m2tPR5TXL58QibvAEbTmOnD7e4LvpzWluFpDshbb9Ao"
                 alt="Xiaobin Mei"
                 className="profile-image"
