@@ -4,7 +4,7 @@ import IntellJIcon from "../assets/icons/intellij.png"
 import GitIcon from "../assets/icons/git.png"
 import GithubIcon from "../assets/icons/github.png"
 
-function Skill() {
+function Skills() {
   const technicalSkills = [
     { name: "HTML", level: 6 },
     { name: "Java", level: 60 },
@@ -85,4 +85,4 @@ function Skill() {
   );
 }
 
-export default Skill;
+export default Skills;

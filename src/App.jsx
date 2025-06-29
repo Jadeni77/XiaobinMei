@@ -2,10 +2,11 @@ import React from "react";
 import NavBar from "./components/NavBar";
 import Hero from "./components/Hero";
 import About from "./components/About";
-import Skill from "./components/Skills";
-import Project from "./components/Projects";
+import Skills from "./components/Skills";
+import Projects from "./components/Projects";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import "./App.css";
 
 function App() {
   return (
@@ -22,10 +23,10 @@ function App() {
         <About />
 
         {/* Skills section - showcase technical abilities */}
-        <Skill />
+        <Skills />
 
         {/* Projects section - highlight work */}
-        <Project />
+        <Projects />
 
         {/* Contact section - form for visitors to reach out */}
         <Contact />
