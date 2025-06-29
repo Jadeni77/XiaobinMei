@@ -41,6 +41,8 @@ function NavBar() {
           <a href="#skills" onClick={() => setIsOpen(false)}>Skills</a>
           <a href="#projects" onClick={() => setIsOpen(false)}>Projects</a>
           <a href="#contact" onClick={() => setIsOpen(false)}>Contact</a>
+          <a href="https://www.linkedin.com/in/xiaobinmei/" target="_blank">My Linkedin</a>
+          <a href="https://github.com/Jadeni77" target="_blank">My Github</a>
         </div>
       </div>
     </nav>
