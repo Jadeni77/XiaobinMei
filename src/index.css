@@ -174,7 +174,90 @@ body {
   }
 }
 
-/* ===== Global Responsive Styles ===== */
+/* src/App.css */
+
+/* ... (Your existing global styles, variables, etc. remain the same) ... */
+
+/* Navbar Styles (Desktop Base) */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: transparent;
+  transition: var(--transition);
+  padding: 20px 0;
+  overflow: visible; /* Ensure this is present and correct */
+  min-height: 60px; /* Added this for consistency */
+}
+
+.navbar.scrolled {
+  background-color: var(--white);
+  padding: 15px 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-brand a {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.navbar-links {
+  display: flex; /* Default for desktop */
+}
+
+.navbar-links a {
+  color: var(--dark);
+  text-decoration: none;
+  margin-left: 30px;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.navbar-links a:hover {
+  color: var(--primary);
+}
+
+/* Hamburger Toggle Base Styles (for desktop, hide it) */
+.navbar-toggle {
+  display: none; /* Hide by default on desktop */
+
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 1001; /* Should be higher than the mobile menu's z-index */
+
+  flex-direction: column;
+  justify-content: space-between;
+  height: 25px;
+  width: 30px;
+
+  visibility: hidden; /* Hidden on desktop */
+  pointer-events: none; /* Not clickable on desktop */
+}
+
+.navbar-toggle span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: var(--dark);
+  margin: 4px 0;
+  transition: var(--transition);
+}
+
+/* ==================================================================== */
+/* ===== Global Responsive Styles (Mobile Specific Overrides) ===== */
+/* ==================================================================== */
 @media (max-width: 768px) {
   /* Container adjustments */
   .container {
@@ -235,10 +318,40 @@ body {
   }
 
   .profile-image {
-    width: 280px;
-    height: 280px;
-    max-width: 100%;
+    width: 280px; /* Ensure this is for the *image itself* */
+    height: 280px; /* Ensure this is for the *image itself* */
+    max-width: 100%; /* Important for scaling down */
+    /* Remove any background-color, border, or box-shadow from the image itself if its container has it */
   }
+
+  /* Your hero image container needs to be responsive too */
+  .hero-image-container { /* If this is the container around the image */
+      max-width: 300px; /* Example: Max size for the image on mobile */
+      margin: 30px auto; /* Center it */
+  }
+
+  .hero-image { /* If this is the div holding the actual img tag */
+      width: 100%;
+      height: 0;
+      padding-bottom: 100%; /* Keep it square */
+      position: relative;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: var(--light-gray);
+      border: 5px solid var(--white);
+      box-shadow: var(--shadow);
+  }
+
+  .hero-image img { /* The actual img inside the hero-image container */
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+  }
+
 
   .badge {
     bottom: 10px;
@@ -247,62 +360,65 @@ body {
     font-size: 0.9rem;
   }
 
-  /* ===== Navigation Mobile Styles ===== */
-  @media (max-width: 768px) {
-    .navbar-links {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      background-color: white;
-      flex-direction: column;
-      padding: 80px 20px 20px;
-      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-      transform: translateY(-100%);
-      transition: transform 0.3s ease, visibility 0s 0.3s;
-      z-index: 999;
-      justify-content: flex-start;
-      align-items: center;
-      visibility: hidden; /* Hide the menu when not open */
-      pointer-events: none; /* Prevent interaction when hidden */
-    }
+  /* ==================================================================== */
+  /* ===== Navigation Mobile Styles (UN-NESTED HERE) ===== */
+  /* ==================================================================== */
 
-    .navbar-links.open {
-      transform: translateY(0); /* show the menu */
-      visibility: visible;
-      pointer-events: auto; /* Allow interaction */
-      transition-delay: 0s; /* No delay when opening */
-    }
-
-    .navbar-links a {
-      margin: 15px 0;
-      font-size: 1.2rem;
-      margin-left: 0;
-      padding: 10px 0;
-      width: 100%;
-      text-align: center;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .navbar-toggle {
-      display: block;
-      visibility: visible;
-      pointer-events: auto; /* Allow clicks on mobile */
-      z-index: 1000;
-    }
-
-    /* Adjustments for the hamburger span lines themselves for the open/close animation */
-    .navbar-toggle.open span:nth-child(1) {
-      transform: translateY(7px) rotate(45deg); /* Adjust based on margin/height */
-    }
-    .navbar-toggle.open span:nth-child(2) {
-      opacity: 0;
-    }
-    .navbar-toggle.open span:nth-child(3) {
-      transform: translateY(-10px) rotate(-45deg); /* Adjust based on margin/height */
-    }
+  .navbar-links {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: white;
+    flex-direction: column;
+    padding: 80px 20px 20px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-100%);
+    transition: transform 0.3s ease, visibility 0s 0.3s;
+    z-index: 999; /* Menu should be behind the toggle button */
+    justify-content: flex-start;
+    align-items: center;
+    visibility: hidden; /* Hide the menu when not open */
+    pointer-events: none; /* Prevent interaction when hidden */
   }
+
+  .navbar-links.open {
+    transform: translateY(0); /* show the menu */
+    visibility: visible;
+    pointer-events: auto; /* Allow interaction */
+    transition-delay: 0s; /* No delay when opening */
+  }
+
+  .navbar-links a {
+    margin: 15px 0;
+    font-size: 1.2rem;
+    margin-left: 0;
+    padding: 10px 0;
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .navbar-toggle {
+    /* This overrides the display: none from the desktop base styles */
+    display: flex; /* Make the hamburger icon visible and use flex for its spans */
+    visibility: visible; /* Ensure it's visible on mobile */
+    pointer-events: auto; /* Allow clicks on mobile */
+    z-index: 1001; /* Keep higher z-index for the toggle button */
+  }
+
+  /* Adjustments for the hamburger span lines themselves for the open/close animation */
+  .navbar-toggle.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg); /* Adjust based on margin/height */
+  }
+  .navbar-toggle.open span:nth-child(2) {
+    opacity: 0;
+  }
+  .navbar-toggle.open span:nth-child(3) {
+    transform: translateY(-10px) rotate(-45deg); /* Adjust based on margin/height */
+  }
+
 
   /* ===== Skills Section Mobile Styles ===== */
   .skills-container {
@@ -341,7 +457,9 @@ body {
   }
 }
 
-/* ===== Desktop Styles (Remain Unchanged) ===== */
+/* ==================================================================== */
+/* ===== Desktop Styles (min-width: 769px) ===== */
+/* ==================================================================== */
 @media (min-width: 769px) {
   /* Hero Section */
   .hero-container {
@@ -352,11 +470,11 @@ body {
 
   /* Navigation */
   .navbar-links {
-    display: flex;
+    display: flex; /* Ensure desktop nav links are flex */
   }
 
   .navbar-toggle {
-    display: none;
+    display: none; /* Ensure hamburger is hidden on desktop */
   }
 
   /* Skills Section */
