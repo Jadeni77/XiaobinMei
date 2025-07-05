@@ -260,14 +260,19 @@ body {
       padding: 80px 20px 20px;
       box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
       transform: translateY(-100%);
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, visibility 0s 0.3s;
       z-index: 999;
       justify-content: flex-start;
       align-items: center;
+      visibility: hidden; /* Hide the menu when not open */
+      pointer-events: none; /* Prevent interaction when hidden */
     }
 
     .navbar-links.open {
-      transform: translateY(0);
+      transform: translateY(0); /* show the menu */
+      visibility: visible;
+      pointer-events: auto; /* Allow interaction */
+      transition-delay: 0s; /* No delay when opening */
     }
 
     .navbar-links a {
@@ -282,7 +287,20 @@ body {
 
     .navbar-toggle {
       display: block;
+      visibility: visible;
+      pointer-events: auto; /* Allow clicks on mobile */
       z-index: 1000;
+    }
+
+    /* Adjustments for the hamburger span lines themselves for the open/close animation */
+    .navbar-toggle.open span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg); /* Adjust based on margin/height */
+    }
+    .navbar-toggle.open span:nth-child(2) {
+      opacity: 0;
+    }
+    .navbar-toggle.open span:nth-child(3) {
+      transform: translateY(-10px) rotate(-45deg); /* Adjust based on margin/height */
     }
   }
 
