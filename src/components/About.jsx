@@ -46,7 +46,7 @@ function About() {
           <h3>My Journey</h3>
           <p>
             Hello, I am Xiaobin Mei, but you can call me Jaden. I'm a sophomore
-            at Northeastern University, pursuing a combined major in Computer
+            at Northeastern University in 2026, pursuing a combined major in Computer
             Science and Mathematics. I have a strong interest in software
             development, clean design, and building tools that solve real-world
             problems. In the future, I hope to become either a software engineer
