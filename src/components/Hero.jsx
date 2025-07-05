@@ -21,7 +21,7 @@ function Hero() {
             <a href="#projects" className="btn btn-primary">
               View My Work
             </a>
-            <a href="#contact" className="btn btn-secondary">
+            <a href="#footer" className="btn btn-secondary">
               Contact Me
             </a>
           </div>
