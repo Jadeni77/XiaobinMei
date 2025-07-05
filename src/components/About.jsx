@@ -87,12 +87,18 @@ function About() {
                     <em>Northeastern University Boston, MA</em>
                   </p>
                   <ul>
-                    <li>Develop a social media marketing strategy to raise
-                       awareness of Saxbys’ student-run cafe model.</li>
-                    <li>Conduct market research and create slide decks to present 
-                      marketing recommendations to the project sponsor.</li>
-                    <li>Collaborate with a team of four to position Saxbys as a
-                      meaningful career opportunity, not just a coffee shop.</li>
+                    <li>
+                      Develop a social media marketing strategy to raise
+                      awareness of Saxbys’ student-run cafe model.
+                    </li>
+                    <li>
+                      Conduct market research and create slide decks to present
+                      marketing recommendations to the project sponsor.
+                    </li>
+                    <li>
+                      Collaborate with a team of four to position Saxbys as a
+                      meaningful career opportunity, not just a coffee shop.
+                    </li>
                   </ul>
                 </div>
 
@@ -108,10 +114,11 @@ function About() {
                   </p>
                   <ul>
                     <li>
-                      Learn the fundamental concepts of machine learning under 
+                      Learn the fundamental concepts of machine learning under
                       experienced mentors and club members.
                     </li>
-                    <li>Applied concepts through hands-on coding projects using
+                    <li>
+                      Applied concepts through hands-on coding projects using
                       Google Collab.
                     </li>
                   </ul>
@@ -119,8 +126,10 @@ function About() {
 
                 {/* CAPS Assistant Job */}
                 <div className="experience-title-line">
-                  <h5>College Access and Post-Secondary Success (CAPS) Assistant Intern 
-                    - Youth Center</h5>
+                  <h5>
+                    College Access and Post-Secondary Success (CAPS) Assistant
+                    Intern - Youth Center
+                  </h5>
                   <em className="experience-date">
                     September 2024 - August 2025
                   </em>
@@ -134,11 +143,19 @@ function About() {
                     </em>
                   </p>
                   <ul>
-                    <li>Guide students through key steps of the college application process, 
-                      including building resumes <br /> and writing personal statements.</li>
-                    <li>Host SAT bootcamps to strengthen test-taking skills and improve scores.</li>
-                    <li>Translate workshop content into Chinese to support newly immigrated 
-                      students’ understanding.</li>
+                    <li>
+                      Guide students through key steps of the college
+                      application process, including building resumes <br /> and
+                      writing personal statements.
+                    </li>
+                    <li>
+                      Host SAT bootcamps to strengthen test-taking skills and
+                      improve scores.
+                    </li>
+                    <li>
+                      Translate workshop content into Chinese to support newly
+                      immigrated students’ understanding.
+                    </li>
                   </ul>
                 </div>
 
@@ -161,8 +178,8 @@ function About() {
                     </li>
                     <li>
                       Guided and supported children (ages 8–12) in hands-on
-                      coding and STEM activities, <br />including 3D printing, and
-                      programming language "Scratch".
+                      coding and STEM activities, <br />
+                      including 3D printing, and programming language "Scratch".
                     </li>
                     <li>
                       Helped ensure a fun, engaging, and safe learning
