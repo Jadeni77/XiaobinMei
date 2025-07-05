@@ -15,7 +15,7 @@ function Project() {
         "Built in Java for the Object-Oriented Design course. This" +
         "GUI-based calendar supports viewing, creating, and editing events using" +
         "the Java Swing library.",
-      category: ["Coursework Projects", "Web"],
+      category: ["Coursework Projects"],
       technologies: ["Java", "Git", "Github", "Swing"],
       course: "Object-Oriented Design (CS 3500)",
       github:
