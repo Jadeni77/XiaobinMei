@@ -134,6 +134,8 @@
   flex: 1;
   display: flex;
   justify-content: center;
+  max-width: 450px;
+   width: 100%;
 }
 
 .hero-image {
