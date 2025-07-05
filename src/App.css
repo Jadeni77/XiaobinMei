@@ -314,7 +314,6 @@
   align-items: center;
 }
 
-
 .experience-date {
   font-style: italic;
   font-size: 0.9rem;
@@ -719,8 +718,7 @@
   font-size: 1.2rem;
   margin-bottom: 20px;
   white-space: nowrap;
-    max-width: 300px;
-
+  max-width: 300px;
 }
 
 .social-links {
@@ -756,7 +754,7 @@
   color: #e0e1dd;
   padding: 60px 0 30px;
   border-top: 1px solid #2a3b5a;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   position: relative;
   overflow: hidden;
 }
@@ -768,7 +766,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
+  background: radial-gradient(
+    circle at top right,
+    rgba(37, 99, 235, 0.1) 0%,
+    transparent 70%
+  );
   pointer-events: none;
 }
 
@@ -927,8 +929,7 @@
   transform: scale(1.1);
 }
 
-/*
-// Contact Section
+/* Contact Section */
 .contact-section {
   display: flex;
   flex-direction: column;
@@ -983,70 +984,3 @@
 .footer-bottom p {
   margin: 0;
 }
-*/
-
-@media (max-width: 900px) {
-  .footer-content {
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-  }
-  
-  .footer-brand {
-    grid-column: span 2;
-  }
-  
-  .social-links {
-    grid-template-columns: repeat(6, 1fr);
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 600px) {
-  .footer-content {
-    grid-template-columns: 1fr;
-  }
-  
-  .footer-brand {
-    grid-column: span 1;
-  }
-  
-  .social-links {
-    grid-template-columns: repeat(3, 1fr);
-    max-width: 250px;
-  }
-  
-  .contact-emails {
-    gap: 10px;
-  }
-  
-  .email-link span {
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .footer {
-    padding: 40px 0 20px;
-  }
-  
-  .footer-brand h3 {
-    font-size: 1.6rem;
-  }
-  
-  .footer-links h4,
-  .social-section h4,
-  .contact-section h4 {
-    font-size: 1.2rem;
-  }
-  
-  .social-links {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-  
-  .social-links a {
-    width: 44px;
-    height: 44px;
-  }
-}
-
