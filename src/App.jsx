@@ -29,7 +29,7 @@ function App() {
         <Projects />
 
         {/* Contact section - form for visitors to reach out */}
-        <Contact />
+       {/* <Contact /> */ }
       </main>
 
       {/* Footer - copyright and social links */}

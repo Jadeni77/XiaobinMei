@@ -1,13 +1,17 @@
 import VscodeIcon from "../assets/icons/vscode.png";
 import EclipseIcon from "../assets/icons/eclipse.png";
-import IntellJIcon from "../assets/icons/intellij.png"
-import GitIcon from "../assets/icons/git.png"
-import GithubIcon from "../assets/icons/github.png"
+import IntellJIcon from "../assets/icons/intellij.png";
+import GitIcon from "../assets/icons/git.png";
+import GithubIcon from "../assets/icons/github.png";
+import RacketIcon from "../assets/icons/racket.png";
 
 function Skills() {
   const technicalSkills = [
-    { name: "HTML", level: 6 },
+    { name: "HTML", level: 50 },
     { name: "Java", level: 60 },
+    { name: "Python", level: 30},
+    { name: "DrRacket", level: 60},
+    { name: "JavaScript", level: 40}
   ];
 
   const tools = [
@@ -16,6 +20,7 @@ function Skills() {
   { name: "IntelliJ IDEA", icon: IntellJIcon },
   { name: "Git", icon: GitIcon },
   { name: "GitHub", icon: GithubIcon },
+  { name: "DrRacket", icon: RacketIcon}
 ];
 
   const otherSkills = ["UI/UX Design", "Git & Github", "Testing"];

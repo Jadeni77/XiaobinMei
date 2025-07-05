@@ -415,6 +415,22 @@ body {
   border-left: 4px solid var(--success);
 }
 
+.experience-header {
+  margin-bottom: 20px;
+}
+
+.experience-title-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.experience-date {
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
 /* Skills Section */
 .skills {
   padding: 100px 0;
@@ -813,6 +829,9 @@ body {
 .social-section h4 {
   font-size: 1.2rem;
   margin-bottom: 20px;
+  white-space: nowrap;
+    max-width: 300px;
+
 }
 
 .social-links {
@@ -842,7 +861,6 @@ body {
   border-radius: 3px;
 }
 
-/* Footer CSS */
 /* Footer CSS */
 .footer {
   background: linear-gradient(135deg, #1a2a4a 0%, #0d1b2a 100%);
@@ -885,7 +903,7 @@ body {
 }
 
 .footer-brand h3 {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   margin-bottom: 15px;
   color: #60a5fa;
   font-weight: 700;
@@ -963,6 +981,16 @@ body {
   width: 100%;
 }
 
+/* Social Section - Fixed Styles */
+.social-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.social-section h4 {
+  margin-bottom: 15px;
+}
+
 .social-links {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1000,7 +1028,6 @@ body {
   box-shadow: none;
 }
 
-/* REMOVED FILTER PROPERTIES TO PRESERVE ICON COLORS */
 .social-icon {
   width: 24px;
   height: 24px;
@@ -1009,6 +1036,12 @@ body {
 
 .social-links a:hover .social-icon {
   transform: scale(1.1);
+}
+
+/* Contact Section */
+.contact-section {
+  display: flex;
+  flex-direction: column;
 }
 
 .contact-emails {
@@ -1035,7 +1068,6 @@ body {
   border-color: rgba(96, 165, 250, 0.3);
 }
 
-/* REMOVED FILTER PROPERTIES TO PRESERVE ICON COLORS */
 .email-icon {
   width: 24px;
   height: 24px;

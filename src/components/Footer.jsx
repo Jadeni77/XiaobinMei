@@ -22,8 +22,16 @@ function Footer() {
       icon: OutlookIcon,
       url: "mailto:mei.xiaob@northeastern.edu",
     },
-    { name: "Instagram", icon: InstagramIcon, url: "https://www.instagram.com/xiaobinmei/?next=%2F" },
-    { name: "Discord", icon: DiscordIcon, url: "https://discord.com/users/892505810238853121" },
+    {
+      name: "Instagram",
+      icon: InstagramIcon,
+      url: "https://www.instagram.com/xiaobinmei/?next=%2F",
+    },
+    {
+      name: "Discord",
+      icon: DiscordIcon,
+      url: "https://discord.com/users/892505810238853121",
+    },
   ];
 
   const navLinks = [
@@ -59,37 +67,43 @@ function Footer() {
           </div>
 
           {/* Social Media Icons */}
-          <div className="social-links">
+          <div className="social-section">
             <h4>Connect With Me</h4>
-            {socialMedia.map((social, index) => (
-              <a
-                key={index}
-                href={social.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={social.name}
-                className={social.url ? "" : "disabled-link"}
-              >
-                <img
-                  src={social.icon}
-                  alt={social.name}
-                  className="social-icon"
-                />
-              </a>
-            ))}
+
+            <div className="social-links">
+              {socialMedia.map((social, index) => (
+                <a
+                  key={index}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.name}
+                  className={social.url ? "" : "disabled-link"}
+                >
+                  <img
+                    src={social.icon}
+                    alt={social.name}
+                    className="social-icon"
+                  />
+                </a>
+              ))}
+            </div>
           </div>
 
           {/* Email Contact */}
           <div className="contact-section">
             <h4>Contact Me</h4>
-            <div className="contact-email">
+            <div className="contact-emails">
               <a href="mailto:xmei59664@gmail.com" className="email-link">
                 <img src={EmailIcon} alt="Email" className="email-icon" />
-                <span>Xmei59664@gmail.com</span>
+                <span>xmei59664@gmail.com</span>
               </a>
-              <a href="mailto:mei.xiaob@northeastern.edu" className="email-link">
+              <a
+                href="mailto:mei.xiaob@northeastern.edu"
+                className="email-link"
+              >
                 <img src={OutlookIcon} alt="Outlook" className="email-icon" />
-                <span>Mei.xiaob@northeastern.edu</span>
+                <span>mei.xiaob@northeastern.edu</span>
               </a>
             </div>
           </div>
