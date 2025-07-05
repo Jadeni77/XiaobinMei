@@ -317,28 +317,6 @@ body {
   .skill-tags {
     justify-content: center;
   }
-  
-  /* ===== Footer Mobile Styles ===== */
-  .footer-content {
-    grid-template-columns: 1fr;
-    gap: 30px;
-    text-align: center;
-  }
-  
-  .footer-links ul {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-  }
-  
-  .social-links {
-    justify-content: center;
-  }
-  
-  .contact-emails {
-    align-items: center;
-  }
 }
 
 /* ===== Desktop Styles (Remain Unchanged) ===== */
@@ -363,12 +341,5 @@ body {
   .skills-container {
     display: flex;
     gap: 50px;
-  }
-  
-  /* Footer */
-  .footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 40px;
   }
 }
