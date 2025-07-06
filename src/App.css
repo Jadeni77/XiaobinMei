@@ -187,16 +187,75 @@ body {
   transition: var(--transition);
 }
 
+/* Mobile Navigation Menu */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%; /* Start off-screen */
+  height: 100vh;
+  width: 70%;
+  max-width: 300px;
+  background-color: var(--white); /* Solid background */
+  flex-direction: column;
+  padding: 100px 20px 20px;
+  transition: var(--transition);
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+  z-index: 1001; /* Below toggle button */
+  display: flex;
+}
+
+.mobile-menu.open {
+  right: 0; /* Slide in */
+}
+
+.mobile-menu a {
+  color: var(--dark);
+  text-decoration: none;
+  padding: 15px 0;
+  font-weight: 500;
+  transition: var(--transition);
+  border-bottom: 1px solid var(--light-gray);
+  width: 100%;
+}
+
+.mobile-menu a:hover {
+  color: var(--primary);
+  background-color: rgba(37, 99, 235, 0.05);
+}
+
 .navbar-toggle.open span:nth-child(1) {
   transform: translateY(7px) rotate(45deg);
 }
 
 .navbar-toggle.open span:nth-child(2) {
   opacity: 0;
+    background-color: var(--primary); /* Change color when open */
+
 }
 
 .navbar-toggle.open span:nth-child(3) {
   transform: translateY(-10px) rotate(-45deg);
+    background-color: var(--primary); /* Change color when open */
+
+}
+
+/* Dark overlay when menu is open */
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000; /* Below menu but above content */
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+}
+
+.menu-overlay.visible {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* ===== HERO SECTION ===== */
@@ -1024,6 +1083,11 @@ body {
     border-bottom: 1px solid var(--light-gray);
     width: 100%;
     margin-left: 0;
+  }
+
+   /* Prevent body scroll when menu is open */
+  body.menu-open {
+    overflow: hidden;
   }
 
   /* Hero Section */
