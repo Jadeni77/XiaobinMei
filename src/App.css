@@ -167,7 +167,7 @@ body {
 
 .navbar-toggle {
   display: none;
-  background: none;
+  background: red;
   border: none;
   cursor: pointer;
   padding: 10px;
