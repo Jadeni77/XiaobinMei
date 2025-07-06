@@ -137,6 +137,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .navbar-brand a {
@@ -144,10 +145,12 @@ body {
   font-weight: 700;
   color: var(--primary);
   text-decoration: none;
+  z-index: 1002;
 }
 
 .navbar-links {
   display: flex;
+  transition: var(--transition);
 }
 
 .navbar-links a {
