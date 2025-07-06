@@ -997,6 +997,7 @@ body {
     display: flex;
     visibility: visible;
     pointer-events: auto;
+    z-index: 1001;
   }
 
   .navbar-links {
@@ -1010,6 +1011,7 @@ body {
     padding: 100px 20px 20px;
     transition: var(--transition);
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
   }
 
   .navbar-links.open {
