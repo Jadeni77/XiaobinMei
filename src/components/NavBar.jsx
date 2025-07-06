@@ -29,7 +29,7 @@ function NavBar() {
           <button 
           className={`navbar-toggle ${isOpen ? 'open' : ''}`} 
           onClick={() => setIsOpen(!isOpen)}
-        >Menu
+        ><strong>Menu</strong>
           <span></span>
           <span></span>
           <span></span>
