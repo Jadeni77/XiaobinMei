@@ -1021,6 +1021,7 @@ body {
   }
 
   .navbar-links a {
+    font-size: 1.2rem;
     margin: 15px 0;
     padding: 10px;
     border-bottom: 1px solid var(--light-gray);
