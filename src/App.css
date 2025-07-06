@@ -177,7 +177,7 @@ body {
   height: 25px;
   width: 30px;
 
-  /* --- NEW/ADJUSTED STYLES FOR BUTTON SIZE & TEXT --- */
+    /* --- NEW/ADJUSTED STYLES FOR BUTTON SIZE & TEXT --- */
   padding: 10px 18px; /* Increase padding around the "Menu" text to make the button larger */
   font-size: 1.15rem; /* Increase the font size of the "Menu" text */
   font-weight: 600; /* Ensure the "Menu" text is bold for visibility */
@@ -1007,8 +1007,6 @@ body {
     visibility: visible;
     pointer-events: auto;
     z-index: 1001;
-    width: auto; /* Allow width to adjust to content + padding */
-    height: auto; /* Allow height to adjust to content + padding */
   }
 
   .navbar-links {
@@ -1030,7 +1028,6 @@ body {
   }
 
   .navbar-links a {
-    font-size: 1.2rem;
     margin: 15px 0;
     padding: 10px;
     border-bottom: 1px solid var(--light-gray);
