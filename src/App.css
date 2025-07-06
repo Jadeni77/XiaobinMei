@@ -990,7 +990,15 @@ body {
   }
 }
 
+/* Mobile Navigation Fixes */
 @media (max-width: 768px) {
+  /* Navbar Mobile Styles */
+  .navbar-toggle {
+    display: flex;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
   .navbar-links {
     position: fixed;
     top: 0;
@@ -1013,14 +1021,10 @@ body {
     padding: 10px;
     border-bottom: 1px solid var(--light-gray);
     width: 100%;
+    margin-left: 0;
   }
 
-  .navbar-toggle {
-    display: flex;
-    visibility: visible;
-    pointer-events: auto;
-  }
-
+  /* Hero Section */
   .hero-container {
     flex-direction: column;
   }
@@ -1036,14 +1040,12 @@ body {
     height: 300px;
   }
 
-  .info-cards {
-    flex-direction: column;
+  /* About Section */
+  .about-images {
+    justify-content: center;
   }
 
-  .skills-container {
-    flex-direction: column;
-  }
-
+  /* Skills Section */
   .tools-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -1073,10 +1075,6 @@ body {
 
   .project-filters {
     justify-content: flex-start;
-  }
-
-  .about-images {
-    justify-content: center;
   }
 
   .about-profile-image-container {
