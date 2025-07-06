@@ -174,10 +174,6 @@ body {
   }
 }
 
-/* src/App.css */
-
-/* ... (Your existing global styles, variables, etc. remain the same) ... */
-
 /* Navbar Styles (Desktop Base) */
 .navbar {
   position: fixed;
@@ -189,7 +185,7 @@ body {
   transition: var(--transition);
   padding: 20px 0;
   overflow: visible; /* Ensure this is present and correct */
-  min-height: 60px; /* Added this for consistency */
+  min-height: 60px; 
 }
 
 .navbar.scrolled {
@@ -361,7 +357,7 @@ body {
   }
 
   /* ==================================================================== */
-  /* ===== Navigation Mobile Styles (UN-NESTED HERE) ===== */
+  /* ===== Navigation Mobile Styles ===== */
   /* ==================================================================== */
 
   .navbar-links {

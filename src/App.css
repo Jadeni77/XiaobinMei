@@ -144,11 +144,12 @@
 
 /* The image picture in the hero section */
 .profile-image {
-  width: 450px;
-  height: 450px;
+  width: 100%;
+  height: 100%;
   background-color: var(--light-gray);
   border-radius: 50%;
-  display: flex;
+  object-fit: cover;
+  display: block;
   align-items: center;
   justify-content: center;
   border: 5px solid var(--white);
