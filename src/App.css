@@ -176,15 +176,6 @@ body {
   justify-content: space-between;
   height: 25px;
   width: 30px;
-
-    /* --- NEW/ADJUSTED STYLES FOR BUTTON SIZE & TEXT --- */
-  padding: 10px 18px; /* Increase padding around the "Menu" text to make the button larger */
-  font-size: 1.15rem; /* Increase the font size of the "Menu" text */
-  font-weight: 600; /* Ensure the "Menu" text is bold for visibility */
-  color: var(--dark); /* Ensure the "Menu" text color contrasts well */
-  display: flex; /* Ensure the button itself is a flex container for its content */
-  align-items: center; /* Vertically center the text */
-  justify-content: center; /* Horizontally center the text */
 }
 
 .navbar-toggle span {
@@ -1007,6 +998,8 @@ body {
     visibility: visible;
     pointer-events: auto;
     z-index: 1001;
+    height: 25px; /* Restore these to correctly size the hamburger icon */
+    width: 30px; /* Restore these to correctly size the hamburger icon */
   }
 
   .navbar-links {
