@@ -1000,6 +1000,7 @@ body {
     z-index: 1001;
     height: 25px; /* Restore these to correctly size the hamburger icon */
     width: 30px; /* Restore these to correctly size the hamburger icon */
+    font-size: 20px;
   }
 
   .navbar-links {
