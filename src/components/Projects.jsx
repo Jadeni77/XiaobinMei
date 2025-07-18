@@ -12,8 +12,8 @@ function Project() {
       id: 1,
       title: "Calendar Application",
       description:
-        "Built in Java for the Object-Oriented Design course. This" +
-        "GUI-based calendar supports viewing, creating, and editing events using" +
+        "Built in with Java for the Object-Oriented Design course. This " +
+        "GUI-based calendar supports viewing, creating, and editing events using " +
         "the Java Swing library.",
       category: ["Coursework Projects"],
       technologies: ["Java", "Git", "Github", "Swing"],
@@ -27,8 +27,9 @@ function Project() {
       id: 2,
       title: "NEU Bookstore Web App",
       description:
-        "A web application that allows users to browse, filter and manage" +
-        "book listings. Built with a focus on frontend design and interactivity using React.js.",
+        "A web application that allows users to browse, filter and manage " +
+        "book listings. Built with a focus on frontend design and interactivity using React.js " +
+        "and a backend design using Python with a database keeping track of data displaying on web.",
       category: ["Web"],
       technologies: ["React.js", "Python", "Git", "Github"],
       github: "https://github.com/oasis-2025-charles-alpha/app",
@@ -39,7 +40,7 @@ function Project() {
       id: 3,
       title: "Personal Portfolio Website",
       description:
-        "A responsive website built with React.js to showccase my projects" +
+        "A responsive website built with React.js to showccase my projects " +
         "skills, and contact information. It features smooth navigation, and project filtering.",
       category: ["Web"],
       technologies: ["React.js", "Git", "Github"],
