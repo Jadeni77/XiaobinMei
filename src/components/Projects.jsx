@@ -35,7 +35,7 @@ function Project() {
       github: "https://github.com/oasis-2025-charles-alpha/app",
       projectImage: NEUBookstore,
     },
-
+ 
     {
       id: 3,
       title: "Personal Portfolio Website",
