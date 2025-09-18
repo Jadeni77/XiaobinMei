@@ -12,7 +12,7 @@ To run this project locally:
 3. npm install
 4. Start the development server: npm run dev
 
-## 🛠️ Technology
+## 🛠️ Technology Used
 * React.js - Frontend Framework
 * Vite - Development/build tool
 * Github Pages - Hosting & deployment
