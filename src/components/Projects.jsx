@@ -3,6 +3,8 @@ import ProjectCard from "./ProjectCard";
 import CalendarImage from "../assets/projectimage/calendar.png";
 import MyWeb from "../assets/projectimage/myweb.png";
 import NEUBookstore from "../assets/projectimage/bookstore.png";
+import LightEmAll from "../assets/projectimage/LightEmAll.png";
+import Connections from "../assets/projectimage/Connections.png";
 
 function Project() {
   const category = ["All", "Web", "Game Development", "Coursework Projects"];
@@ -40,13 +42,42 @@ function Project() {
       id: 3,
       title: "Personal Portfolio Website",
       description:
-        "A responsive website built with React.js to showccase my projects " +
+        "A responsive website built with React.js to showcase my projects " +
         "skills, and contact information. It features smooth navigation, and project filtering.",
       category: ["Web"],
       technologies: ["React.js", "Git", "Github"],
       github: "https://github.com/Jadeni77/myWeb",
       projectImage: MyWeb,
     },
+
+    {
+      id: 4,
+      title: "LightEmAll",
+      description: "The LightEmAll game is an implementation of Java built for the Fundamentals" +
+      "of Computer Science II (Fundies 2) with the given documentation of ImpWorld and the unique" +
+      "tester library. It uses the special big-bang syntax to run the program on the local desktop" + 
+      "with dependency on mutable states, built-in world classes, and event handlers (mouse events," +
+      "keyboard events). Additionally, it is designed with a functional programming style, which" + 
+      "does not contain too many object-oriented programming styles.",
+      category: ["Game Development", "Coursework Projects"],
+      technologies: ["Java"],
+      github: "https://github.com/Jadeni77/LightEmAll",
+      projectImage: LightEmAll
+    },
+
+    {
+      id: 5,
+      title: "Connections",
+      description: "The Connections game is built for the Fundamentals of Computer Science II (Fundies II) course, "+
+      "with the given documentation of ImpWorld and the unique tester library. It uses the special" + 
+      "big-bang syntax to run the program on the local desktop with dependency on mutable states, " +
+      "built-in world classes, and event handlers (mouse events, keyboard events).",
+      category: ["Game Development", "Coursework Projects"],
+      technologies: ["Java"],
+      github: "https://github.com/Jadeni77/Connections",
+      projectImage: Connections
+
+    }
     //for further projects, just add more items inside this array
   ];
 
