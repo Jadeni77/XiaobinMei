@@ -1,5 +1,6 @@
 import React from "react";
 import LinkedIn from "../assets/aboutimage/linkedin.jpeg";
+import Resume from "../assets/Xiaobin-Mei-Resume.pdf";
 
 function Hero() {
   return (
@@ -21,6 +22,9 @@ function Hero() {
             <a href="#projects" className="btn btn-primary">
               View My Work
             </a>
+            <a href={Resume} target="_blank"  rel="noopener noreferrer" className="btn btn-primary">
+              Download Resume
+              </a>
             <a href="#footer" className="btn btn-secondary">
               Contact Me
             </a>
