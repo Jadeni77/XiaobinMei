@@ -23,7 +23,7 @@ function Skills() {
   { name: "DrRacket", icon: RacketIcon}
 ];
 
-  const otherSkills = ["UI/UX Design", "Git & Github", "Testing"];
+  const otherSkills = ["UI/UX Design", "Git", "Testing"];
 
   return (
     <section id="skills" className="skills">
