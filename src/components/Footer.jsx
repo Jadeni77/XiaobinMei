@@ -23,16 +23,16 @@ function Footer() {
       icon: OutlookIcon,
       url: "mailto:mei.xiaob@northeastern.edu",
     },
-    {
-      name: "Instagram",
-      icon: InstagramIcon,
-      url: "https://www.instagram.com/xiaobinmei/?next=%2F",
-    },
-    {
-      name: "Discord",
-      icon: DiscordIcon,
-      url: "https://discord.com/users/892505810238853121",
-    },
+    // {
+    //   name: "Instagram",
+    //   icon: InstagramIcon,
+    //   url: "https://www.instagram.com/xiaobinmei/?next=%2F",
+    // },
+    // {
+    //   name: "Discord",
+    //   icon: DiscordIcon,
+    //   url: "https://discord.com/users/892505810238853121",
+    // },
   ];
 
   const navLinks = [
