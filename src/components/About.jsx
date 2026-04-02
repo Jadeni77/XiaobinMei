@@ -187,7 +187,14 @@ function About() {
                         <h4>Relevant Coursework</h4>
 
                         <div className="info-card semester-section">
-                          <h4 className="">Fall 2025</h4>
+                            <h4>Spring 2026</h4>
+                            <ul>
+                                <li>Co-op: AI-CARING Research Assistant @ NEU</li>
+                            </ul>
+                        </div>
+
+                        <div className="info-card semester-section">
+                          <h4 >Fall 2025</h4>
                           <ul>
                             <li>CS3000: Algorithms & Data</li>
                             <li>DS3000: Foundation of Data Science</li>
@@ -197,7 +204,7 @@ function About() {
                         </div>
 
                         <div className="info-card semester-section">
-                          <h4 className="">Summer 2025</h4>
+                          <h4>Summer 2025</h4>
                           <ul>
                             <li>CS3500: Object-Oriented Design</li>
                             <li>MATH3527: Number Theory 1</li>
@@ -206,7 +213,7 @@ function About() {
                         </div>
 
                         <div className="info-card semester-section">
-                          <h4 className="">Spring 2025</h4>
+                          <h4>Spring 2025</h4>
                           <ul>
                             <li>CS2510: Computer Science 2</li>
                             <li>MATH2341: Differential Equations and Linear Algebra</li>
@@ -215,7 +222,7 @@ function About() {
                         </div>
 
                         <div className="info-card semester-section">
-                          <h4 className="">Fall 2024</h4>
+                          <h4>Fall 2024</h4>
                           <ul>
                             <li>CS2500: Computer Science 1</li>
                             <li>CS1800: Discrete Structure</li>
