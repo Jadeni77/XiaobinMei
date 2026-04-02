@@ -4,8 +4,6 @@ import GithubIcon from "../assets/icons/github.png";
 import LinkedInIcon from "../assets/icons/linkedin.png";
 import EmailIcon from "../assets/icons/email.png";
 import OutlookIcon from "../assets/icons/outlook.png";
-import InstagramIcon from "../assets/icons/instagram.png";
-import DiscordIcon from "../assets/icons/discord.png";
 
 function Footer() {
   const currentYear = new Date().getFullYear();
@@ -23,16 +21,6 @@ function Footer() {
       icon: OutlookIcon,
       url: "mailto:mei.xiaob@northeastern.edu",
     },
-    // {
-    //   name: "Instagram",
-    //   icon: InstagramIcon,
-    //   url: "https://www.instagram.com/xiaobinmei/?next=%2F",
-    // },
-    // {
-    //   name: "Discord",
-    //   icon: DiscordIcon,
-    //   url: "https://discord.com/users/892505810238853121",
-    // },
   ];
 
   const navLinks = [
@@ -40,7 +28,6 @@ function Footer() {
     { name: "About", url: "#about" },
     { name: "Skills", url: "#skills" },
     { name: "Projects", url: "#projects" },
-    {/* name: "Contact", url: "#contact" */},
   ];
 
   return (
