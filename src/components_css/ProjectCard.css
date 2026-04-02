@@ -1,0 +1,125 @@
+/* ===== PROJECT CARD ===== */
+.project-card {
+  background-color: var(--white);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+
+.project-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.project-image {
+  height: 200px;
+  background: linear-gradient(135deg, #a7c5ed 0%, #c4d7f5 100%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.project-screenshot {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.project-image .image-placeholder {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  background-color: var(--white);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: var(--primary);
+  font-weight: bold;
+  box-shadow: var(--shadow);
+}
+
+.project-content {
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.project-header {
+  margin-bottom: 10px;
+}
+
+.project-category {
+  display: inline-block;
+  background-color: #dbeafe;
+  color: var(--primary);
+  padding: 5px 10px;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.project-title {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+  color: var(--dark);
+}
+
+.project-category-tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.project-description {
+  color: var(--gray);
+  margin-bottom: 15px;
+  line-height: 1.6;
+  flex-grow: 1;
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  padding: 15px 0;
+}
+
+.project-technologies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tech-tag {
+  background-color: #e2e8f0;
+  color: var(--dark);
+  padding: 5px 12px;
+  border-radius: 30px;
+  font-size: 0.85rem;
+}
+
+.project-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 15px;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-link-text {
+  font-size: 0.9rem;
+  color: var(--gray);
+  font-style: italic;
+  padding: 8px 0;
+}

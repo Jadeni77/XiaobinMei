@@ -1,4 +1,5 @@
 import React from "react";
+import "../components_css/Hero.css";
 import LinkedIn from "../assets/aboutimage/linkedin.jpeg";
 import Resume from "../assets/Xiaobin-Mei-Resume.pdf";
 

@@ -1,4 +1,5 @@
 import React from "react";
+import "../components_css/ProjectCard.css";
 
 function ProjectCard({ project }) {
   const { title, description, category, technologies, github, projectImage } =
