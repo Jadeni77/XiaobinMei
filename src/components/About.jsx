@@ -187,7 +187,7 @@ function About() {
                       <div className="info-card relevant-course">
                         <h4>Relevant Coursework</h4>
 
-                        <div className="info-card semester section">
+                        <div className="info-card semester-section">
                             <h4>Summer 2026</h4>
                             <ul>
                                 <li>CS3200: Introduction to Databases</li>
