@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../components_css/Projects.css";
 import ProjectCard from "./ProjectCard";
 import CalendarImage from "../assets/projectimage/calendar.png";
 import MyWeb from "../assets/projectimage/myweb.png";

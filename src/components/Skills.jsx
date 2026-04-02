@@ -1,3 +1,4 @@
+import "../components_css/Skills.css";
 import VscodeIcon from "../assets/icons/vscode.png";
 import EclipseIcon from "../assets/icons/eclipse.png";
 import IntellJIcon from "../assets/icons/intellij.png";

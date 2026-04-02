@@ -1,4 +1,5 @@
 import React from "react";
+import "../components_css/About.css";
 import Oasis from "../assets/aboutimage/oasis.jpg";
 import LinkedIn from "../assets/aboutimage/linkedin.jpeg";
 
