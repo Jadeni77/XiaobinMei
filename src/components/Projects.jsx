@@ -22,7 +22,7 @@ function Project() {
       technologies: ["Java", "Git", "Github", "Swing"],
       course: "Object-Oriented Design (CS 3500)",
       github:
-        "https://github.com/Jadeni77/OODGroupProject/tree/main/Assignment6",
+        "https://github.com/Jadeni77/Calendar/tree/main",
       projectImage: CalendarImage,
     },
 
