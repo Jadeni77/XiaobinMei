@@ -1,15 +1,60 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import "../components_css/Hero.css";
 import LinkedIn from "../assets/aboutimage/linkedin.jpeg";
 import Resume from "../assets/Xiaobin-Mei-Resume.pdf";
 
+const names = ["Xiaobin Mei", "Jaden Mei", "梅晓彬"];
+const TYPE_SPEED = 100;
+const DELETE_SPEED = 60;
+const PAUSE_AFTER_TYPE = 2000;
+const PAUSE_AFTER_DELETE = 800;
+
 function Hero() {
+  const [nameIndex, setNameIndex] = useState(0);
+  const [displayed, setDisplayed] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const current = names[nameIndex];
+    let delay = isDeleting ? DELETE_SPEED : TYPE_SPEED;
+
+    if (!isDeleting && displayed === current) {
+      delay = PAUSE_AFTER_TYPE;
+    }
+    if (isDeleting && displayed === "") {
+      delay = PAUSE_AFTER_DELETE;
+    }
+
+    const timer = setTimeout(() => {
+      if (!isDeleting) {
+        if (displayed === current) {
+          setIsDeleting(true);
+        } else {
+          setDisplayed(current.slice(0, displayed.length + 1));
+        }
+      } else {
+        if (displayed === "") {
+          setIsDeleting(false);
+          setNameIndex((prev) => (prev + 1) % names.length);
+        } else {
+          setDisplayed(displayed.slice(0, -1));
+        }
+      }
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [displayed, isDeleting, nameIndex]);
+
   return (
     <section id="home" className="hero">
       <div className="container hero-container">
         <div className="hero-content">
           <h1 className="hero-title">
-            Hi, I'm <span className="highlight">Xiaobin Mei</span>
+            Hi, I'm{" "}
+            <span className="highlight hero-name">
+              {displayed}
+              <span className="hero-cursor" />
+            </span>
           </h1>
           <h2 className="hero-subtitle">CS & Math Student @ Northeastern</h2>
           <p className="hero-description">

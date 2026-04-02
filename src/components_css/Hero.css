@@ -82,6 +82,27 @@
   animation: pulse 2s infinite;
 }
 
+/* ===== TYPEWRITER ===== */
+.hero-name {
+  display: inline-block;
+  min-width: 1ch;
+}
+
+.hero-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  background-color: var(--primary);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 0.7s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .hero-container {
