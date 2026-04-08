@@ -52,6 +52,7 @@ function Skills() {
     {
       title: "Development",
       items: [
+        { name: "FastAPI", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/fastapi/fastapi-original.svg"},
         { name: "React", icon: devicon("react") },
         { name: "Spring Boot", icon: devicon("spring") },
         { name: "Node.js", icon: devicon("nodejs") },
