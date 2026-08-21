@@ -23,17 +23,42 @@ function Projects() {
     matchesCategory(project, selectedCategory)
   ).length;
 
+  /*
+   * Two phases, because a one-phase fade is not legible here.
+   *
+   * React applies display:none the moment state changes, so outgoing cards
+   * vanish in a hard cut and only the survivors have anything to animate — and
+   * they are already 90% opaque within 200ms while the container is still
+   * reflowing. What you see is the layout jumping, not a fade.
+   *
+   * So: fade the grid out first, swap the filter while it is invisible, then
+   * fade the new cards back in. The reflow happens behind an empty grid.
+   */
   const handleFilter = (category) => {
     if (category === selectedCategory) return;
 
-    if (gridRef.current && !prefersReducedMotion()) {
-      gridHeightBefore.current = gridRef.current.offsetHeight;
-      didFilter.current = true;
+    const grid = gridRef.current;
+    if (!grid || prefersReducedMotion()) {
+      setSelectedCategory(category);
+      return;
     }
-    setSelectedCategory(category);
+
+    gridHeightBefore.current = grid.offsetHeight;
+    // A second click mid-transition must not stack tweens on the grid.
+    gsap.killTweensOf(grid);
+
+    gsap.to(grid, {
+      opacity: 0,
+      duration: 0.2,
+      ease: "power2.in",
+      onComplete: () => {
+        didFilter.current = true;
+        setSelectedCategory(category);
+      },
+    });
   };
 
-  // Entrance: GSAP owns transforms on these cards so it never fights the FLIP.
+  // First scroll into view: cards fade up in sequence.
   useGSAP(
     () => {
       const media = gsap.matchMedia();
@@ -65,17 +90,8 @@ function Projects() {
     { scope: gridRef }
   );
 
-  /*
-   * Re-layout on filter change: cards fade in at their new slots.
-   *
-   * This previously used the Flip plugin. FLIP is correct but for a grid that
-   * reflows rows it makes cards travel the full width and height of the
-   * container — a card moving from row 2 to row 1 swept 367px across and 565px
-   * up. That reads as sliding, so it is gone.
-   *
-   * The container height still animates: the row count changes the instant
-   * React commits, and without it everything below would snap up the page.
-   */
+  // Phase 2 of the filter: the grid is invisible, so bring it and its new
+  // cards back up while the container settles onto the new row count.
   useGSAP(
     () => {
       if (!didFilter.current) return;
@@ -89,39 +105,45 @@ function Projects() {
       media.add("(prefers-reduced-motion: no-preference)", () => {
         const heightFrom = gridHeightBefore.current;
         const heightTo = grid.offsetHeight;
-
-        const fade = gsap.fromTo(
-          grid.querySelectorAll(".project-card:not(.project-card--hidden)"),
-          { opacity: 0 },
-          {
-            opacity: 1,
-            duration: motion.slow,
-            ease: motion.easeOut,
-            stagger: 0.05,
-            clearProps: "opacity",
-          }
+        const cards = grid.querySelectorAll(
+          ".project-card:not(.project-card--hidden)"
         );
 
-        const settle =
-          heightFrom > 0 && heightTo > 0
-            ? gsap.fromTo(
-                grid,
-                { height: heightFrom },
-                {
-                  height: heightTo,
-                  duration: motion.settle,
-                  ease: motion.ease,
-                  onComplete: () => {
-                    grid.style.height = "";
-                  },
-                }
-              )
-            : null;
+        const tl = gsap.timeline({
+          onComplete: () => {
+            grid.style.height = "";
+          },
+        });
+
+        // Container back to full opacity immediately; the cards carry the fade.
+        tl.set(grid, { opacity: 1 })
+          .fromTo(
+            cards,
+            { opacity: 0 },
+            {
+              opacity: 1,
+              // Long enough to actually register as a fade.
+              duration: 0.55,
+              ease: "power2.out",
+              stagger: 0.08,
+              clearProps: "opacity",
+            },
+            0
+          );
+
+        if (heightFrom > 0 && heightTo > 0 && heightFrom !== heightTo) {
+          tl.fromTo(
+            grid,
+            { height: heightFrom },
+            { height: heightTo, duration: motion.settle, ease: motion.ease },
+            0
+          );
+        }
 
         return () => {
-          fade.kill();
-          settle?.kill();
+          tl.kill();
           grid.style.height = "";
+          gsap.set(grid, { clearProps: "opacity" });
         };
       });
 
