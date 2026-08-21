@@ -67,9 +67,6 @@
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: var(--space-5);
   align-items: stretch;
-  /* Flip's `absolute: true` pulls cards out of flow mid-animation; they need a
-     positioned ancestor to measure against. */
-  position: relative;
 }
 
 /* ---- Closing CTA ---- */

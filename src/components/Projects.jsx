@@ -3,13 +3,7 @@ import "../components_css/Projects.css";
 import ProjectCard from "./ProjectCard";
 import { projects, projectCategories } from "../data/projects";
 import { site } from "../data/site";
-import {
-  Flip,
-  gsap,
-  motion,
-  prefersReducedMotion,
-  useGSAP,
-} from "../lib/gsap";
+import { gsap, motion, prefersReducedMotion, useGSAP } from "../lib/gsap";
 import { ArrowRightIcon, GithubIcon } from "./Icons";
 import SectionHeader from "./SectionHeader";
 
@@ -19,10 +13,11 @@ const matchesCategory = (project, category) =>
 function Projects() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const gridRef = useRef(null);
-  // Layout snapshot taken before React re-renders, consumed after it commits.
-  const flipState = useRef(null);
-  // Grid height before the re-layout, so the container can be held open.
+  // Grid height before the re-layout, so the container can settle smoothly
+  // instead of snapping when the row count changes.
   const gridHeightBefore = useRef(0);
+  // Distinguishes a filter change from the initial mount.
+  const didFilter = useRef(false);
 
   const visibleCount = projects.filter((project) =>
     matchesCategory(project, selectedCategory)
@@ -31,14 +26,9 @@ function Projects() {
   const handleFilter = (category) => {
     if (category === selectedCategory) return;
 
-    // FLIP needs "first" positions measured before the DOM changes.
-    // Spread into a static array — `.children` is a live HTMLCollection that
-    // mutates as React re-renders, which corrupts the captured state.
     if (gridRef.current && !prefersReducedMotion()) {
       gridHeightBefore.current = gridRef.current.offsetHeight;
-      flipState.current = Flip.getState([
-        ...gridRef.current.querySelectorAll(".project-card"),
-      ]);
+      didFilter.current = true;
     }
     setSelectedCategory(category);
   };
@@ -49,21 +39,25 @@ function Projects() {
       const media = gsap.matchMedia();
 
       media.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.from(".project-card:not(.project-card--hidden)", {
-          opacity: 0,
-          y: 24,
-          scale: 0.97,
-          duration: motion.slow,
-          ease: motion.easeBack,
-          stagger: 0.07,
-          // Hand transform back to CSS afterwards, so the :hover lift works.
-          clearProps: "opacity,transform",
-          scrollTrigger: {
-            trigger: gridRef.current,
-            start: "top 85%",
-            once: true,
-          },
-        });
+        // Fade only. No rise or scale: every movement in this grid reads as
+        // sliding, which is what we are deliberately avoiding here.
+        gsap.fromTo(
+          ".project-card:not(.project-card--hidden)",
+          { opacity: 0 },
+          {
+            opacity: 1,
+            duration: motion.slow,
+            ease: motion.easeOut,
+            stagger: 0.07,
+            // Hand opacity back to CSS so nothing stays pinned inline.
+            clearProps: "opacity",
+            scrollTrigger: {
+              trigger: gridRef.current,
+              start: "top 85%",
+              once: true,
+            },
+          }
+        );
       });
 
       return () => media.revert();
@@ -71,76 +65,67 @@ function Projects() {
     { scope: gridRef }
   );
 
-  // Re-layout: animate cards to their new grid slots instead of snapping.
+  /*
+   * Re-layout on filter change: cards fade in at their new slots.
+   *
+   * This previously used the Flip plugin. FLIP is correct but for a grid that
+   * reflows rows it makes cards travel the full width and height of the
+   * container — a card moving from row 2 to row 1 swept 367px across and 565px
+   * up. That reads as sliding, so it is gone.
+   *
+   * The container height still animates: the row count changes the instant
+   * React commits, and without it everything below would snap up the page.
+   */
   useGSAP(
     () => {
-      const state = flipState.current;
-      if (!state) return;
-      flipState.current = null;
+      if (!didFilter.current) return;
+      didFilter.current = false;
 
       const grid = gridRef.current;
-      /*
-       * `absolute: true` pulls every card out of flow for the duration, so the
-       * grid has no in-flow children and its height collapses to zero. That
-       * yanked the "Want to see more" CTA and the footer up the page and
-       * dropped them back when the flip finished.
-       *
-       * Read the new layout's natural height NOW, while the cards are still
-       * static, then animate the container from the old height to that. The
-       * content below glides instead of jumping.
-       */
-      const heightFrom = gridHeightBefore.current;
-      const heightTo = grid.offsetHeight;
-      const releaseHeight = () => {
-        if (grid) grid.style.height = "";
-      };
+      if (!grid) return;
 
-      Flip.from(state, {
-        duration: motion.flip,
-        ease: motion.ease,
-        scale: true,
-        // Take cards out of flow while they move so siblings don't jitter.
-        absolute: true,
-        onEnter: (elements) =>
-          gsap.fromTo(
-            elements,
-            { opacity: 0, scale: 0.9 },
-            { opacity: 1, scale: 1, duration: motion.slow, ease: motion.easeOut }
-          ),
-        onLeave: (elements) =>
-          gsap.to(elements, {
-            opacity: 0,
-            scale: 0.9,
-            duration: motion.base,
-            ease: motion.ease,
-          }),
-        // `absolute` lifts cards out of flow while they move. Belt-and-braces
-        // cleanup: if any card kept its absolute positioning the grid would
-        // have no in-flow children and collapse to zero height.
-        onComplete: () => {
-          const cards = grid?.querySelectorAll(".project-card");
-          if (cards) {
-            gsap.set(cards, {
-              clearProps: "position,top,left,width,height,transform,opacity",
-            });
-          }
-          releaseHeight();
-        },
-      });
+      const media = gsap.matchMedia();
 
-      // Hold the container open, then settle it onto the new layout's height.
-      if (heightFrom > 0 && heightTo > 0) {
-        gsap.fromTo(
-          grid,
-          { height: heightFrom },
+      media.add("(prefers-reduced-motion: no-preference)", () => {
+        const heightFrom = gridHeightBefore.current;
+        const heightTo = grid.offsetHeight;
+
+        const fade = gsap.fromTo(
+          grid.querySelectorAll(".project-card:not(.project-card--hidden)"),
+          { opacity: 0 },
           {
-            height: heightTo,
-            duration: motion.flip,
-            ease: motion.ease,
-            onComplete: releaseHeight,
+            opacity: 1,
+            duration: motion.slow,
+            ease: motion.easeOut,
+            stagger: 0.05,
+            clearProps: "opacity",
           }
         );
-      }
+
+        const settle =
+          heightFrom > 0 && heightTo > 0
+            ? gsap.fromTo(
+                grid,
+                { height: heightFrom },
+                {
+                  height: heightTo,
+                  duration: motion.settle,
+                  ease: motion.ease,
+                  onComplete: () => {
+                    grid.style.height = "";
+                  },
+                }
+              )
+            : null;
+
+        return () => {
+          fade.kill();
+          settle?.kill();
+          grid.style.height = "";
+        };
+      });
+
+      return () => media.revert();
     },
     { dependencies: [selectedCategory], scope: gridRef }
   );
