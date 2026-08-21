@@ -3,6 +3,7 @@ import MyWeb from "../assets/projectimage/myweb.png";
 import NEUBookstore from "../assets/projectimage/bookstore.png";
 import LightEmAll from "../assets/projectimage/LightEmAll.png";
 import Connections from "../assets/projectimage/Connections.png";
+import Invasion from "../assets/projectimage/theinvasion.png";
 
 export const projectCategories = [
   "All",
@@ -15,31 +16,43 @@ export const projectCategories = [
 export const projects = [
   {
     id: 1,
+    title: "The Invasion",
+    blurb: 
+      "A full stack toward defense game where players can deploy defensive units to prevent enemies from reaching their base.",
+    description: 
+      "",
+    category: ["Web", "Game Development"],
+    technologies: ["React", "Java", "Git", "PostgreSQL", "Docker"],
+    github: "https://github.com/Jadeni77/The_Invasion",
+    projectImage: Invasion,
+  },
+  {
+    id: 2,
     title: "Calendar Application",
     blurb:
       "A GUI calendar for viewing, creating, and editing events, built in Java with Swing.",
     description:
       "Built in Java for the Object-Oriented Design course. This GUI-based calendar supports viewing, creating, and editing events using the Java Swing library.",
     category: ["Coursework Projects"],
-    technologies: ["Java", "Swing", "Git", "GitHub"],
+    technologies: ["Java", "Swing", "Git"],
     course: "Object-Oriented Design (CS 3500)",
     github: "https://github.com/Jadeni77/Calendar/tree/main",
     projectImage: CalendarImage,
   },
   {
-    id: 2,
+    id: 3,
     title: "NEU Bookstore Web App",
     blurb:
       "Browse, filter, and manage book listings — React front end on a Python backend.",
     description:
       "A web application that lets users browse, filter, and manage book listings. Built with a focus on front-end design and interactivity using React, with a Python backend and a database tracking the data displayed on the site.",
     category: ["Web"],
-    technologies: ["React", "Python", "Git", "GitHub"],
+    technologies: ["React", "Python", "Git"],
     github: "https://github.com/oasis-2025-charles-alpha/app",
     projectImage: NEUBookstore,
   },
   {
-    id: 3,
+    id: 4,
     title: "LightEmAll",
     blurb:
       "A wire-rotation puzzle game in Java, built on ImpWorld with mutable state and event handlers.",
@@ -52,7 +65,7 @@ export const projects = [
     projectImage: LightEmAll,
   },
   {
-    id: 4,
+    id: 5,
     title: "Connections",
     blurb:
       "A word-grouping puzzle game in Java, driven by mouse and keyboard event handling.",
