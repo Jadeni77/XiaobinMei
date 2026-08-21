@@ -18,9 +18,9 @@ export const projects = [
     id: 1,
     title: "The Invasion",
     blurb: 
-      "A full stack toward defense game where players can deploy defensive units to prevent enemies from reaching their base.",
+      "A full-stack tower defense game where players can deploy defensive units to prevent enemies from reaching their base.",
     description: 
-      "",
+      "Built with a Spring Boot backend and React frontend, it handles real-time game state, wave progression, and unit placement logic, with PostgreSQL persisting player progress and match history.",
     category: ["Web", "Game Development"],
     technologies: ["React", "Java", "Git", "PostgreSQL", "Docker"],
     github: "https://github.com/Jadeni77/The_Invasion",
