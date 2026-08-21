@@ -51,27 +51,46 @@ function Journey() {
           aria: "none",
         });
 
-        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-        tl.from(card.querySelector(".journey-card-year"), {
-          yPercent: 115,
-          opacity: 0,
-          duration: 0.5,
-        })
-          .from(
+        /*
+         * fromTo, not from, with explicit end states.
+         *
+         * These elements are stable across re-renders, so a killed tween
+         * leaves its start values inline. A subsequent `from` would then read
+         * opacity: 0 as its destination and animate 0 -> 0, leaving the
+         * content permanently invisible. React StrictMode's double-invoked
+         * effects trigger exactly that in development.
+         *
+         * clearProps hands styling back to CSS afterwards, which also keeps
+         * the thumbnails' :hover lift working — an inline transform would
+         * otherwise outrank it.
+         */
+        const tl = gsap.timeline({
+          defaults: { ease: "power3.out", clearProps: "opacity,transform" },
+        });
+
+        tl.fromTo(
+          card.querySelector(".journey-card-year"),
+          { yPercent: 115, opacity: 0 },
+          { yPercent: 0, opacity: 1, duration: 0.5 }
+        )
+          .fromTo(
             split.words,
-            { yPercent: 110, opacity: 0, duration: 0.6, stagger: 0.045 },
+            { yPercent: 110, opacity: 0 },
+            { yPercent: 0, opacity: 1, duration: 0.6, stagger: 0.045 },
             "-=0.35"
           )
-          .from(
+          .fromTo(
             card.querySelector(".journey-card-story"),
-            { y: 18, opacity: 0, duration: 0.6 },
+            { y: 18, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.6 },
             "-=0.4"
           )
-          .from(
+          .fromTo(
             card.querySelectorAll(".journey-thumbs button"),
+            { scale: 0.6, opacity: 0 },
             {
-              scale: 0.6,
-              opacity: 0,
+              scale: 1,
+              opacity: 1,
               duration: 0.45,
               stagger: 0.06,
               ease: "back.out(1.6)",
