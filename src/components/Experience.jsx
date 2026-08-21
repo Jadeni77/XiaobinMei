@@ -1,12 +1,20 @@
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import "../components_css/Experience.css";
 import { experience } from "../data/experience";
 import { gsap, motion, ScrollTrigger, useGSAP } from "../lib/gsap";
 import SectionHeader from "./SectionHeader";
+import { ChevronDownIcon } from "./Icons";
+
+/** Roles shown before the visitor asks for more. */
+const COLLAPSED_COUNT = 2;
 
 function Experience() {
   const sectionRef = useRef(null);
   const railRef = useRef(null);
+  const [expanded, setExpanded] = useState(false);
+
+  const shown = expanded ? experience : experience.slice(0, COLLAPSED_COUNT);
+  const hiddenCount = experience.length - COLLAPSED_COUNT;
 
   useGSAP(
     () => {
@@ -42,25 +50,35 @@ function Experience() {
           });
         });
 
-        // Cards fade up as they arrive.
-        gsap.from(".timeline-card", {
-          opacity: 0,
-          y: 28,
-          duration: motion.slow,
-          ease: motion.easeOut,
-          stagger: 0.1,
-          clearProps: "opacity,transform",
-          scrollTrigger: {
-            trigger: ".timeline",
-            start: "top 80%",
-            once: true,
-          },
-        });
+        // Cards fade up as they arrive. fromTo, because this block re-runs
+        // when the list expands and a killed `from` would read the leftover
+        // opacity 0 as its destination.
+        gsap.fromTo(
+          ".timeline-card",
+          { opacity: 0, y: 28 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: motion.slow,
+            ease: motion.easeOut,
+            stagger: 0.1,
+            clearProps: "opacity,transform",
+            scrollTrigger: { trigger: ".timeline", start: "top 80%", once: true },
+          }
+        );
+
+        /*
+         * The rail scrub ends at "bottom 60%" of .timeline and each dot has its
+         * own trigger, so expanding the list changes every measurement. Refresh
+         * after the new rows are in the DOM or the rail scrubs against stale
+         * geometry and the revealed dots never light.
+         */
+        ScrollTrigger.refresh();
       });
 
       return () => media.revert();
     },
-    { scope: sectionRef }
+    { dependencies: [expanded], revertOnUpdate: true, scope: sectionRef }
   );
 
   return (
@@ -76,11 +94,11 @@ function Experience() {
           subtitle="Internships, workshops, and programs across software, education, and community work."
         />
 
-        <ol className="timeline">
+        <ol className="timeline" id="experience-timeline">
           {/* Real element rather than a pseudo-element, so GSAP can scale it */}
           <span className="timeline-rail" ref={railRef} aria-hidden="true" />
 
-          {experience.map((role, index) => (
+          {shown.map((role, index) => (
             <li className="timeline-item" key={role.id}>
               <div className="timeline-marker" aria-hidden="true">
                 <span className="timeline-dot" />
@@ -132,6 +150,27 @@ function Experience() {
             </li>
           ))}
         </ol>
+
+        {hiddenCount > 0 && (
+          <div className="timeline-more">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => setExpanded((open) => !open)}
+              aria-expanded={expanded}
+              aria-controls="experience-timeline"
+            >
+              {expanded
+                ? "Show fewer roles"
+                : `Show ${hiddenCount} more role${hiddenCount === 1 ? "" : "s"}`}
+              <ChevronDownIcon
+                className={`btn-icon timeline-more-chevron ${
+                  expanded ? "is-open" : ""
+                }`}
+              />
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

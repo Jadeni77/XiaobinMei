@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import "../../components_css/JourneyCard.css";
 import { cardTransform } from "./carouselMath";
 
+/** How long each photo holds before the deck advances. */
+const PHOTO_HOLD_MS = 4000;
+
 function JourneyCard({
   milestone,
   distance,
@@ -9,14 +12,30 @@ function JourneyCard({
   position,
   total,
   onSelect,
+  autoplay,
+  onStopAutoplay,
 }) {
   const [photoIndex, setPhotoIndex] = useState(0);
+  // Local, temporary pause — distinct from the permanent one a click sets.
+  const [hovered, setHovered] = useState(false);
 
-  // Reset to the lead photo whenever this card leaves the centre, so returning
-  // to it does not resume mid-set.
+  const photoCount = milestone.photos.length;
+  const cycling = autoplay && !hovered && photoCount > 1;
+
   useEffect(() => {
-    if (!isActive) setPhotoIndex(0);
-  }, [isActive]);
+    if (!cycling) return;
+    const timer = setInterval(
+      () => setPhotoIndex((i) => (i + 1) % photoCount),
+      PHOTO_HOLD_MS
+    );
+    return () => clearInterval(timer);
+  }, [cycling, photoCount]);
+
+  const selectPhoto = (i) => {
+    setPhotoIndex(i);
+    // Choosing a photo stops this deck for good. Other decks are unaffected.
+    onStopAutoplay?.();
+  };
 
   const { transform, opacity, zIndex } = cardTransform(distance);
 
@@ -32,6 +51,13 @@ function JourneyCard({
          inert as a boolean and omits the attribute when false. */
       inert={!isActive}
       onClick={isActive ? undefined : onSelect}
+      /* WCAG 2.2.2 wants a discoverable way to pause auto-updating content.
+         Clicking a thumbnail stops the deck permanently; hover and keyboard
+         focus pause it for as long as attention is on the card. */
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocusCapture={() => setHovered(true)}
+      onBlurCapture={() => setHovered(false)}
     >
       <div className="journey-card-inner">
         <div className="journey-card-top">
@@ -63,7 +89,7 @@ function JourneyCard({
                   className={i === photoIndex ? "is-on" : ""}
                   aria-label={`Photo ${i + 1} of ${milestone.photos.length}`}
                   aria-pressed={i === photoIndex}
-                  onClick={() => setPhotoIndex(i)}
+                  onClick={() => selectPhoto(i)}
                 >
                   <img src={photo.src} alt="" />
                 </button>

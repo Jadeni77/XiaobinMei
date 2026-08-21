@@ -167,9 +167,75 @@ check("reduced motion leaves title visible", reduced.titleOpacity === "1");
 check("reduced motion leaves story visible", reduced.storyOpacity === "1");
 check("reduced motion keeps both nav controls", reduced.navButtons === 2);
 
-// 8. Phone: real touch emulation. A synthetic swipe caught a bug that mouse
-//    testing and the unit tests both missed, so these checks stay permanent.
+// 8. Photo autoplay. Section 7 left prefers-reduced-motion emulated, which is
+//    a free assertion that autoplay stays off under it — check that, then
+//    clear the override before testing the motion-enabled behaviour.
+const reducedPhotoBefore = await evaluate(`(() => {
+  const c = document.querySelector('.journey-card.is-active');
+  return [...c.querySelectorAll('.journey-thumbs button')]
+    .findIndex(b => b.classList.contains('is-on'));
+})()`);
+await sleep(4800);
+const reducedPhotoAfter = await evaluate(`(() => {
+  const c = document.querySelector('.journey-card.is-active');
+  return [...c.querySelectorAll('.journey-thumbs button')]
+    .findIndex(b => b.classList.contains('is-on'));
+})()`);
+check("reduced motion suppresses photo autoplay",
+  reducedPhotoAfter === reducedPhotoBefore, `held on ${reducedPhotoBefore}`);
+
 await send("Emulation.setEmulatedMedia", { features: [] });
+await send("Page.navigate", { url: APP });
+await sleep(3000);
+await evaluate(`document.documentElement.style.scrollBehavior='auto';
+  document.getElementById('journey').scrollIntoView()`);
+await sleep(1200);
+await evaluate(`document.querySelectorAll('.journey-pips button')[0].click()`);
+await sleep(1200);
+// Park the pointer off the cards, or hover-pause suppresses the autoplay.
+await send("Input.dispatchMouseEvent", { type: "mouseMoved", x: 5, y: 5 });
+const activePhoto = () =>
+  evaluate(`(() => {
+    const c = document.querySelector('.journey-card.is-active');
+    return [...c.querySelectorAll('.journey-thumbs button')]
+      .findIndex(b => b.classList.contains('is-on'));
+  })()`);
+
+const photoBefore = await activePhoto();
+await sleep(4800);
+const photoAfter = await activePhoto();
+check("centre deck auto-advances", photoAfter !== photoBefore,
+  `photo ${photoBefore} -> ${photoAfter}`);
+
+const offCentre = await evaluate(`(() => [...document.querySelectorAll('.journey-card:not(.is-active)')]
+  .map(c => [...c.querySelectorAll('.journey-thumbs button')]
+    .findIndex(b => b.classList.contains('is-on'))))()`);
+check("off-centre decks do not cycle", offCentre.every((v) => v === 0),
+  `indices ${offCentre.join(",")}`);
+
+await evaluate(`document.querySelector('.journey-card.is-active .journey-thumbs button').click()`);
+await sleep(300);
+const pinned = await activePhoto();
+await sleep(5200);
+check("clicking a thumbnail pins that deck", (await activePhoto()) === pinned,
+  `held on ${pinned}`);
+
+await evaluate(`document.querySelectorAll('.journey-pips button')[1].click()`);
+await sleep(1200);
+const otherBefore = await activePhoto();
+await sleep(4800);
+check("other decks keep autoplaying", (await activePhoto()) !== otherBefore,
+  "unaffected by the pause");
+
+await evaluate(`document.querySelectorAll('.journey-pips button')[0].click()`);
+await sleep(1200);
+const returned = await activePhoto();
+await sleep(4800);
+check("pause is remembered per deck", (await activePhoto()) === returned,
+  `still held on ${returned}`);
+
+// 9. Phone: real touch emulation. A synthetic swipe caught a bug that mouse
+//    testing and the unit tests both missed, so these checks stay permanent.
 await send("Emulation.setDeviceMetricsOverride", {
   width: 390, height: 844, deviceScaleFactor: 3, mobile: true,
 });

@@ -238,6 +238,21 @@
   opacity: 0.65;
 }
 
+/* ---- Show more / fewer ---- */
+.timeline-more {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-5);
+}
+
+.timeline-more-chevron {
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.timeline-more-chevron.is-open {
+  transform: rotate(180deg);
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 600px) {
   .timeline {

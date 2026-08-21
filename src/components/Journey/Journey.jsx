@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "../../components_css/Journey.css";
 import SectionHeader from "../SectionHeader";
 import { ArrowRightIcon } from "../Icons";
@@ -9,6 +9,7 @@ import JourneyCard from "./JourneyCard";
 import JourneyTrajectory from "./JourneyTrajectory";
 import ProfileStats from "./ProfileStats";
 import { useCarousel } from "./useCarousel";
+import { usePrefersReducedMotion } from "../../hooks/useReveal";
 
 function Journey() {
   const stageRef = useRef(null);
@@ -25,6 +26,18 @@ function Journey() {
     shouldSuppressClick,
     regionProps,
   } = useCarousel(journey.length);
+
+  const reducedMotion = usePrefersReducedMotion();
+
+  /*
+   * Which decks the visitor has taken manual control of. Keyed by milestone id
+   * so a pause survives the card scrolling out of centre and back, and so
+   * pausing one deck never touches the others.
+   */
+  const [pausedDecks, setPausedDecks] = useState(() => new Set());
+  const stopAutoplay = useCallback((id) => {
+    setPausedDecks((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
+  }, []);
 
   const active = journey[index];
 
@@ -152,6 +165,13 @@ function Journey() {
               onSelect={() => {
                 if (!shouldSuppressClick()) go(i);
               }}
+              /* Only the centre deck cycles: off-centre cards are small,
+                 desaturated, and on phones fully transparent, so animating
+                 them is invisible work. */
+              autoplay={
+                i === index && !reducedMotion && !pausedDecks.has(milestone.id)
+              }
+              onStopAutoplay={() => stopAutoplay(milestone.id)}
             />
           ))}
         </div>
