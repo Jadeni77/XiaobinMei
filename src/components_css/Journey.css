@@ -19,7 +19,7 @@
 
 .journey-stage {
   position: relative;
-  height: 660px;
+  height: 776px;
   margin-inline: calc(-1 * clamp(var(--space-4), 4vw, var(--space-6)));
   perspective: 1800px;
   transform-style: preserve-3d;
@@ -126,7 +126,7 @@
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1000px) {
   .journey-stage {
-    height: 620px;
+    height: 712px;
   }
 
   .journey-bloom {
@@ -140,7 +140,7 @@
   /* Below this width a 320px card leaves almost no side peek, so coverflow
      stops earning its complexity — JourneyCard.css hides the neighbours. */
   .journey-stage {
-    height: 600px;
+    height: 656px;
   }
 }
 

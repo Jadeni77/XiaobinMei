@@ -8,7 +8,10 @@
   top: 176px;
   left: 50%;
   width: 500px;
-  height: 456px;
+  /* Tall enough that the photo's flex leftover lands near 7:5 rather than a
+     2.24:1 letterbox. A fixed card height with flexible content squeezes
+     whichever child is flex:auto, and that child is the photo. */
+  height: 570px;
   margin-left: -250px;
   padding: 0;
   overflow: hidden;
@@ -85,12 +88,23 @@
   background-color: var(--surface-2);
 }
 
+/* Bound the story so a long one cannot steal height back from the photo. */
+.journey-card-story {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .journey-photo-main img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Faces sit in the upper third, so bias the crop up rather than centring it.
+     Per-photo `focus` in journey.js overrides this. */
+  object-position: var(--photo-focus, center 30%);
   opacity: 0;
   transform: scale(1.06);
   transition: opacity 550ms var(--ease-out), transform 1100ms var(--ease-out);
@@ -142,17 +156,17 @@
   .journey-card {
     width: 420px;
     margin-left: -210px;
-    height: 430px;
+    height: 530px;
     top: 160px;
   }
 }
 
 @media (max-width: 640px) {
   .journey-card {
-    width: min(88vw, 320px);
-    margin-left: min(-44vw, -160px);
-    height: 410px;
-    top: 148px;
+    width: min(90vw, 340px);
+    margin-left: min(-45vw, -170px);
+    height: 500px;
+    top: 132px;
   }
 
   /* One card at a time: neighbours are pushed fully off-stage. */

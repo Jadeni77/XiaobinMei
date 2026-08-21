@@ -84,12 +84,22 @@ export function useCarousel(count) {
 
   const endDrag = useCallback(() => {
     if (!isDragging) return;
+
+    /*
+     * Read the ref into a local BEFORE handing it to setIndex. The state
+     * updater is lazy, so resetting dragDx.current on a later line would run
+     * first and the updater would then see 0 — meaning no drag ever moved the
+     * carousel. Closing over `dx` keeps the value the gesture actually ended
+     * with.
+     */
+    const dx = dragDx.current;
+    dragDx.current = 0;
+
     setIsDragging(false);
     setDragOffset(0);
     // A real drag must not also fire the click that lands on a side card.
-    suppressClick.current = Math.abs(dragDx.current) > CLICK_SUPPRESS_PX;
-    setIndex((i) => commitDrag(dragDx.current, i, count));
-    dragDx.current = 0;
+    suppressClick.current = Math.abs(dx) > CLICK_SUPPRESS_PX;
+    setIndex((i) => commitDrag(dx, i, count));
   }, [count, isDragging]);
 
   /** True when the last pointer gesture was a drag rather than a tap. */

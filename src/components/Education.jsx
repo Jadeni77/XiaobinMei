@@ -1,11 +1,8 @@
 import "../components_css/Education.css";
 import {
-  courseCount,
   courseworkByYear,
-  coursework,
   degree,
   isWorkTerm,
-  workTermCount,
 } from "../data/education";
 import { useReveal } from "../hooks/useReveal";
 import SectionHeader from "./SectionHeader";
@@ -32,7 +29,6 @@ function Education() {
         <SectionHeader
           eyebrow="Education"
           title="Degree & coursework"
-          subtitle={`${courseCount} Computer Science and Mathematics courses and ${workTermCount} work terms across ${coursework.length} semesters, most recent first.`}
         />
 
         {/* Degree banner */}

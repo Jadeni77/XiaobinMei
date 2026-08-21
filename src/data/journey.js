@@ -12,6 +12,10 @@
  * `accent` is a step name from journeyAccents.js, not a hex.
  * `alt` is required on every photo — these images carry meaning.
  *
+ * Photos are cropped to fill a landscape slot, biased upward so faces survive.
+ * Add an optional `focus` to any photo that needs a different anchor, using
+ * object-position syntax: `focus: "center top"`, `focus: "30% 40%"`.
+ *
  * PLACEHOLDER CONTENT: photos below are existing repo assets. Replace with
  * real photos in src/assets/journey/ and rewrite each `story` in first person.
  */

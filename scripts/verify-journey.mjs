@@ -167,6 +167,79 @@ check("reduced motion leaves title visible", reduced.titleOpacity === "1");
 check("reduced motion leaves story visible", reduced.storyOpacity === "1");
 check("reduced motion keeps both nav controls", reduced.navButtons === 2);
 
+// 8. Phone: real touch emulation. A synthetic swipe caught a bug that mouse
+//    testing and the unit tests both missed, so these checks stay permanent.
+await send("Emulation.setEmulatedMedia", { features: [] });
+await send("Emulation.setDeviceMetricsOverride", {
+  width: 390, height: 844, deviceScaleFactor: 3, mobile: true,
+});
+await send("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 5 });
+await send("Page.navigate", { url: APP });
+await sleep(3200);
+await evaluate(`document.documentElement.style.scrollBehavior='auto';
+  document.getElementById('journey').scrollIntoView()`);
+await sleep(1300);
+
+const phone = await evaluate(`(() => {
+  const stage = document.querySelector('.journey-stage');
+  const card = document.querySelector('.journey-card.is-active');
+  const box = card.querySelector('.journey-photo-main');
+  const cr = card.getBoundingClientRect(), br = box.getBoundingClientRect();
+  const sr = stage.getBoundingClientRect();
+  return {
+    cardFitsStage: cr.bottom <= sr.bottom + 1,
+    photoRatio: +(br.width / br.height).toFixed(2),
+    neighboursHidden: [...document.querySelectorAll('.journey-card:not(.is-active)')]
+      .every(c => Number(getComputedStyle(c).opacity) === 0),
+    touchAction: getComputedStyle(stage).touchAction,
+  };
+})()`);
+check("phone: card fits inside the stage", phone.cardFitsStage);
+check("phone: photo is not letterboxed", phone.photoRatio < 1.8, `${phone.photoRatio}:1`);
+check("phone: one card at a time", phone.neighboursHidden);
+check("phone: touch-action leaves vertical scroll to the page",
+  phone.touchAction === "pan-y", phone.touchAction);
+
+const swipeY = await evaluate(`(() => {
+  const r = document.querySelector('.journey-stage').getBoundingClientRect();
+  return Math.round(r.top + r.height * 0.25);
+})()`);
+const indexNow = () =>
+  evaluate(`[...document.querySelectorAll('.journey-card')]
+    .findIndex(c => c.classList.contains('is-active'))`);
+const touch = (type, x) =>
+  send("Input.dispatchTouchEvent", {
+    type,
+    touchPoints: type === "touchEnd" ? [] : [{ x, y: swipeY, id: 1 }],
+  });
+
+const beforeSwipe = await indexNow();
+await touch("touchStart", 300);
+for (const x of [270, 230, 190, 150, 120]) {
+  await touch("touchMove", x);
+  await sleep(45);
+}
+await touch("touchEnd", 120);
+await sleep(1300);
+const afterSwipe = await indexNow();
+check("phone: touch swipe advances the carousel", afterSwipe === beforeSwipe + 1,
+  `index ${beforeSwipe} -> ${afterSwipe}`);
+
+const scrollBefore = await evaluate(`window.scrollY`);
+await touch("touchStart", 200);
+for (const step of [1, 2, 3, 4]) {
+  await send("Input.dispatchTouchEvent", {
+    type: "touchMove",
+    touchPoints: [{ x: 200, y: swipeY - step * 40, id: 1 }],
+  });
+  await sleep(45);
+}
+await touch("touchEnd", 200);
+await sleep(900);
+const scrollAfter = await evaluate(`window.scrollY`);
+check("phone: vertical touch still scrolls the page", scrollAfter !== scrollBefore,
+  `scrollY ${Math.round(scrollBefore)} -> ${Math.round(scrollAfter)}`);
+
 const failed = results.filter((r) => !r.pass);
 console.log(`\n${results.length - failed.length}/${results.length} checks passed`);
 ws.close();

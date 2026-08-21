@@ -48,6 +48,7 @@ function JourneyCard({
                 src={photo.src}
                 alt={i === photoIndex ? photo.alt : ""}
                 className={i === photoIndex ? "is-on" : ""}
+                style={photo.focus ? { "--photo-focus": photo.focus } : undefined}
                 loading="lazy"
               />
             ))}

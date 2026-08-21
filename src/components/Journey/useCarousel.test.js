@@ -66,6 +66,57 @@ describe("useCarousel", () => {
     expect(result.current.index).toBe(0);
   });
 
+  /**
+   * Drives a whole gesture through the hook. Testing commitDrag in isolation
+   * missed a real bug: endDrag zeroed dragDx on the line after setIndex, and
+   * because the state updater is lazy React ran it against the already-zeroed
+   * ref, so no drag ever changed the index.
+   */
+  const drag = (result, from, to) => {
+    const target = { closest: () => null };
+    act(() =>
+      result.current.regionProps.onPointerDown({
+        clientX: from, pointerId: 1, target, currentTarget: {},
+      })
+    );
+    act(() => result.current.regionProps.onPointerMove({ clientX: to }));
+    act(() => result.current.regionProps.onPointerUp());
+  };
+
+  it("advances when a leftward drag passes the threshold", () => {
+    const { result } = renderHook(() => useCarousel(5));
+    drag(result, 300, 120);
+    expect(result.current.index).toBe(1);
+  });
+
+  it("goes back when a rightward drag passes the threshold", () => {
+    const { result } = renderHook(() => useCarousel(5));
+    act(() => result.current.go(2));
+    drag(result, 120, 300);
+    expect(result.current.index).toBe(1);
+  });
+
+  it("springs back when the drag is too short to commit", () => {
+    const { result } = renderHook(() => useCarousel(5));
+    act(() => result.current.go(2));
+    drag(result, 300, 260);
+    expect(result.current.index).toBe(2);
+  });
+
+  it("does not run past the last milestone", () => {
+    const { result } = renderHook(() => useCarousel(3));
+    act(() => result.current.go(2));
+    drag(result, 300, 100);
+    expect(result.current.index).toBe(2);
+  });
+
+  it("resets drag offset once the gesture ends", () => {
+    const { result } = renderHook(() => useCarousel(5));
+    drag(result, 300, 120);
+    expect(result.current.dragOffset).toBe(0);
+    expect(result.current.isDragging).toBe(false);
+  });
+
   it("suppresses the click that follows a real drag", () => {
     const { result } = renderHook(() => useCarousel(5));
     const target = { closest: () => null };
