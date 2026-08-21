@@ -33,18 +33,13 @@ function ProjectCard({ project, hidden = false }) {
             {title.charAt(0)}
           </div>
         )}
-
-        <div className="project-thumb-tags">
-          {Array.isArray(category) &&
-            category.map((item) => (
-              <span className="tag project-thumb-tag" key={item}>
-                {item}
-              </span>
-            ))}
-        </div>
       </div>
 
       <div className="project-body">
+        {Array.isArray(category) && category.length > 0 && (
+          <p className="project-categories">{category.join(" · ")}</p>
+        )}
+
         <h3 className="project-title">{title}</h3>
 
         {course && <p className="project-course">{course}</p>}
