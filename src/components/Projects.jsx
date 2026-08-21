@@ -21,6 +21,8 @@ function Projects() {
   const gridRef = useRef(null);
   // Layout snapshot taken before React re-renders, consumed after it commits.
   const flipState = useRef(null);
+  // Grid height before the re-layout, so the container can be held open.
+  const gridHeightBefore = useRef(0);
 
   const visibleCount = projects.filter((project) =>
     matchesCategory(project, selectedCategory)
@@ -33,6 +35,7 @@ function Projects() {
     // Spread into a static array — `.children` is a live HTMLCollection that
     // mutates as React re-renders, which corrupts the captured state.
     if (gridRef.current && !prefersReducedMotion()) {
+      gridHeightBefore.current = gridRef.current.offsetHeight;
       flipState.current = Flip.getState([
         ...gridRef.current.querySelectorAll(".project-card"),
       ]);
@@ -75,6 +78,23 @@ function Projects() {
       if (!state) return;
       flipState.current = null;
 
+      const grid = gridRef.current;
+      /*
+       * `absolute: true` pulls every card out of flow for the duration, so the
+       * grid has no in-flow children and its height collapses to zero. That
+       * yanked the "Want to see more" CTA and the footer up the page and
+       * dropped them back when the flip finished.
+       *
+       * Read the new layout's natural height NOW, while the cards are still
+       * static, then animate the container from the old height to that. The
+       * content below glides instead of jumping.
+       */
+      const heightFrom = gridHeightBefore.current;
+      const heightTo = grid.offsetHeight;
+      const releaseHeight = () => {
+        if (grid) grid.style.height = "";
+      };
+
       Flip.from(state, {
         duration: motion.flip,
         ease: motion.ease,
@@ -98,14 +118,29 @@ function Projects() {
         // cleanup: if any card kept its absolute positioning the grid would
         // have no in-flow children and collapse to zero height.
         onComplete: () => {
-          const cards = gridRef.current?.querySelectorAll(".project-card");
+          const cards = grid?.querySelectorAll(".project-card");
           if (cards) {
             gsap.set(cards, {
               clearProps: "position,top,left,width,height,transform,opacity",
             });
           }
+          releaseHeight();
         },
       });
+
+      // Hold the container open, then settle it onto the new layout's height.
+      if (heightFrom > 0 && heightTo > 0) {
+        gsap.fromTo(
+          grid,
+          { height: heightFrom },
+          {
+            height: heightTo,
+            duration: motion.flip,
+            ease: motion.ease,
+            onComplete: releaseHeight,
+          }
+        );
+      }
     },
     { dependencies: [selectedCategory], scope: gridRef }
   );

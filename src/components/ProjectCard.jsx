@@ -6,7 +6,6 @@ function ProjectCard({ project, hidden = false }) {
     title,
     blurb,
     description,
-    category,
     technologies,
     course,
     github,
@@ -36,10 +35,6 @@ function ProjectCard({ project, hidden = false }) {
       </div>
 
       <div className="project-body">
-        {Array.isArray(category) && category.length > 0 && (
-          <p className="project-categories">{category.join(" · ")}</p>
-        )}
-
         <h3 className="project-title">{title}</h3>
 
         {course && <p className="project-course">{course}</p>}
