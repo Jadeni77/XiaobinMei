@@ -1,35 +1,46 @@
+import { useEffect } from "react";
 import NavBar from "./components/NavBar";
 import Hero from "./components/Hero";
 import About from "./components/About";
+import Experience from "./components/Experience";
+import Education from "./components/Education";
 import Skills from "./components/Skills";
 import Projects from "./components/Projects";
 import Footer from "./components/Footer";
 import "./App.css";
 
-
 function App() {
+  /*
+   * On a cold load of a shared link like /#projects, the browser tries to
+   * scroll while #root is still empty, finds nothing, and gives up. Retry
+   * once after mount so deep links actually land on their section.
+   */
+  useEffect(() => {
+    const id = window.location.hash.slice(1);
+    if (!id) return;
+
+    const target = document.getElementById(id);
+    target?.scrollIntoView({ behavior: "instant", block: "start" });
+  }, []);
+
   return (
-    <div className="myWeb">
-      {/* Navigation bar at the top*/}
+    <div className="app-shell">
+      {/* Lets keyboard users jump past the nav */}
+      <a href="#main" className="skip-link">
+        Skip to content
+      </a>
+
       <NavBar />
 
-      {/* Main Content */}
-      <main>
-        {/* Hero section - first thing visitors see */}
+      <main id="main">
         <Hero />
-
-        {/* About section - personal introduction */}
         <About />
-
-        {/* Skills section - showcase technical abilities */}
+        <Experience />
+        <Education />
         <Skills />
-
-        {/* Projects section - highlight work */}
         <Projects />
-
       </main>
 
-      {/* Footer - copyright and social links */}
       <Footer />
     </div>
   );

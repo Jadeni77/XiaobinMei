@@ -1,125 +1,216 @@
 /* ===== PROJECT CARD ===== */
+
 .project-card {
-  background-color: var(--white);
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  transition: var(--transition);
   display: flex;
   flex-direction: column;
+  /* The card owns its own padding via .project-body so the image can bleed */
+  padding: 0;
+  overflow: hidden;
+  /* GSAP owns opacity and transform on these cards (entrance + filter FLIP),
+     so only the hover properties are transitioned here. Listing transform
+     would make CSS fight GSAP's inline values mid-animation. */
+  transition: border-color var(--dur-base) var(--ease-in-out),
+    box-shadow var(--dur-base) var(--ease-in-out),
+    transform var(--dur-base) var(--ease-out);
 }
 
-.project-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+/* Filtered out. display: none also drops the card from the a11y tree. */
+.project-card--hidden {
+  display: none;
 }
 
-.project-image {
-  height: 200px;
-  background: linear-gradient(135deg, #a7c5ed 0%, #c4d7f5 100%);
+/* ---- Thumbnail ---- */
+.project-thumb {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  /* Fixed ratio reserves space before the image loads (no layout shift) */
+  aspect-ratio: 16 / 10;
+  background-color: var(--surface-2);
+  border-bottom: 1px solid var(--border);
   overflow: hidden;
 }
 
-.project-screenshot {
+.project-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
+  transition: transform var(--dur-slow) var(--ease-out);
 }
 
-.project-image .image-placeholder {
-  position: relative;
-  width: 80px;
-  height: 80px;
-  background-color: var(--white);
-  border-radius: 10px;
+.project-card:hover .project-thumb img {
+  transform: scale(1.05);
+}
+
+.project-thumb-placeholder {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  color: var(--fg-subtle);
+}
+
+.project-thumb-tags {
+  position: absolute;
+  inset: auto var(--space-3) var(--space-3) var(--space-3);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.5rem;
-  color: var(--primary);
-  font-weight: bold;
-  box-shadow: var(--shadow);
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }
 
-.project-content {
-  padding: 25px;
+.project-thumb-tag {
+  color: var(--fg);
+  background-color: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-color: transparent;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---- Body ---- */
+.project-body {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
-}
-
-.project-header {
-  margin-bottom: 10px;
-}
-
-.project-category {
-  display: inline-block;
-  background-color: #dbeafe;
-  color: var(--primary);
-  padding: 5px 10px;
-  border-radius: 30px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin-bottom: 10px;
+  gap: var(--space-3);
+  flex: 1 1 auto;
+  padding: var(--space-5);
 }
 
 .project-title {
-  font-size: 1.4rem;
-  margin-bottom: 8px;
-  color: var(--dark);
+  font-size: var(--text-lg);
+  font-weight: 600;
 }
 
-.project-category-tags-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 5px;
+.project-course {
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-top: calc(-1 * var(--space-2));
 }
 
-.project-description {
-  color: var(--gray);
-  margin-bottom: 15px;
-  line-height: 1.6;
-  flex-grow: 1;
-  text-align: left;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  hyphens: auto;
-  padding: 15px 0;
+.project-blurb {
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--fg-muted);
 }
 
-.project-technologies {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
+/* ---- Progressive disclosure for the long description ---- */
+.project-details {
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
 }
 
-.tech-tag {
-  background-color: #e2e8f0;
-  color: var(--dark);
-  padding: 5px 12px;
-  border-radius: 30px;
-  font-size: 0.85rem;
-}
-
-.project-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: auto;
-  padding-top: 15px;
+.project-details summary {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-1) 0;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  list-style: none;
+  transition: color var(--dur-fast) var(--ease-in-out);
 }
 
-.no-link-text {
-  font-size: 0.9rem;
-  color: var(--gray);
-  font-style: italic;
-  padding: 8px 0;
+.project-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.project-details summary::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-1px);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.project-details[open] summary::after {
+  transform: rotate(-135deg) translateY(-1px);
+}
+
+.project-details summary:hover {
+  color: var(--accent-hover);
+}
+
+.project-details p {
+  margin-top: var(--space-2);
+  line-height: var(--leading-relaxed);
+}
+
+/* ---- Tech tags ---- */
+.project-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* ---- Footer ---- */
+.project-footer {
+  /* Pushes the link to the bottom so cards of unequal height still align */
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+}
+
+.project-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.project-link:hover {
+  color: var(--accent);
+}
+
+/* Underline grows out from the left on hover */
+.project-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 8px;
+  width: 0;
+  height: 1.5px;
+  background-color: var(--accent);
+  border-radius: var(--radius-full);
+  transition: width var(--dur-base) var(--ease-out);
+}
+
+.project-link:hover::after,
+.project-link:focus-visible::after {
+  width: 100%;
+}
+
+.project-link--disabled::after {
+  content: none;
+}
+
+/* The external-link glyph nudges out as the card is hovered */
+.project-link svg:last-of-type {
+  transform: translate(-2px, 2px);
+  opacity: 0;
+  transition: transform var(--dur-base) var(--ease-out),
+    opacity var(--dur-base) var(--ease-out);
+}
+
+.project-card:hover .project-link svg:last-of-type,
+.project-link:focus-visible svg:last-of-type {
+  transform: none;
+  opacity: 1;
+}
+
+.project-link--disabled {
+  color: var(--fg-subtle);
+  font-weight: 400;
+  cursor: not-allowed;
 }

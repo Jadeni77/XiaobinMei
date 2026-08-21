@@ -1,107 +1,135 @@
-import React from "react";
 import "../components_css/Footer.css";
-import GithubIcon from "../assets/icons/github.png";
-import LinkedInIcon from "../assets/icons/linkedin.png";
-import EmailIcon from "../assets/icons/email.png";
-import OutlookIcon from "../assets/icons/outlook.png";
+import { navSections, site } from "../data/site";
+import {
+  ArrowUpIcon,
+  GithubIcon,
+  LinkedinIcon,
+  MailIcon,
+} from "./Icons";
+
+const socials = [
+  { name: "GitHub", Icon: GithubIcon, url: site.github },
+  { name: "LinkedIn", Icon: LinkedinIcon, url: site.linkedin },
+];
+
+// Split at the "@" so a long address can wrap at a natural boundary instead
+// of mid-domain ("northeastern.ed" / "u").
+const emails = [site.personalEmail, site.schoolEmail].map((address) => {
+  const [local, domain] = address.split("@");
+  return { address, local, domain };
+});
 
 function Footer() {
   const currentYear = new Date().getFullYear();
 
-  const socialMedia = [
-    { name: "Github", icon: GithubIcon, url: "https://github.com/Jadeni77" },
-    {
-      name: "LinkedIn",
-      icon: LinkedInIcon,
-      url: "https://www.linkedin.com/in/xiaobinmei/",
-    },
-    { name: "Email", icon: EmailIcon, url: "mailto:xmei59664@gmail.com" },
-    {
-      name: "Outlook",
-      icon: OutlookIcon,
-      url: "mailto:mei.xiaob@northeastern.edu",
-    },
-  ];
-
-  const navLinks = [
-    { name: "Home", url: "#home"},
-    { name: "About", url: "#about" },
-    { name: "Skills", url: "#skills" },
-    { name: "Projects", url: "#projects" },
-  ];
-
   return (
     <footer id="footer" className="footer">
       <div className="container">
-        <div className="footer-content">
+        {/* Contact prompt doubles as the "Get in touch" destination */}
+        <div className="footer-cta">
+          <h2 className="footer-cta-title">Let&apos;s build something.</h2>
+          <p className="footer-cta-text">
+            I&apos;m open to internships, collaborations, and a good
+            conversation about code or math. The fastest way to reach me is
+            email.
+          </p>
+          <div className="footer-cta-actions">
+            <a
+              href={`mailto:${site.schoolEmail}`}
+              className="btn btn-primary"
+            >
+              <MailIcon className="btn-icon" />
+              Email me
+            </a>
+            {socials.map((social) => (
+              <a
+                key={social.name}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-secondary"
+              >
+                <social.Icon className="btn-icon" />
+                {social.name}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div className="footer-grid">
           <div className="footer-brand">
-            <h3>Xiaobin(Jaden) Mei</h3>
-            <p>
-              Learning how to build responsive and accessible websites and user
-              interfaces to create solutions that address user needs, improve
-              existing systems, and solve real-world problems!
+            <span className="footer-brand-mark" aria-hidden="true">
+              XM
+            </span>
+            <p className="footer-brand-text">
+              Building responsive, accessible websites and interfaces that
+              address real user needs and solve real-world problems.
             </p>
           </div>
 
-          {/* Navigation Links */}
-          <div className="footer-links">
-            <h4>Quick Links</h4>
+          <nav className="footer-col" aria-label="Footer navigation">
+            <h3 className="footer-col-title">Explore</h3>
             <ul>
-              {navLinks.map((link, index) => (
-                <li key={index}>
-                  <a href={link.url}>{link.name}</a>
+              <li>
+                <a href="#home">Home</a>
+              </li>
+              {navSections.map((section) => (
+                <li key={section.id}>
+                  <a href={`#${section.id}`}>{section.label}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="footer-col">
+            <h3 className="footer-col-title">Contact</h3>
+            <ul>
+              {emails.map((email) => (
+                <li key={email.address}>
+                  <a
+                    href={`mailto:${email.address}`}
+                    className="footer-email footer-email--address"
+                  >
+                    <MailIcon width="15" height="15" />
+                    <span className="footer-email-text">
+                      {email.local}
+                      <wbr />@{email.domain}
+                    </span>
+                  </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Social Media Icons */}
-          <div className="social-section">
-            <h4>Connect With Me</h4>
-
-            <div className="social-links">
-              {socialMedia.map((social, index) => (
-                <a
-                  key={index}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.name}
-                  className={social.url ? "" : "disabled-link"}
-                >
-                  <img
-                    src={social.icon}
-                    alt={social.name}
-                    className="social-icon"
-                  />
-                </a>
+          <div className="footer-col">
+            <h3 className="footer-col-title">Elsewhere</h3>
+            <ul>
+              {socials.map((social) => (
+                <li key={social.name}>
+                  <a
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="footer-email"
+                  >
+                    <social.Icon width="15" height="15" />
+                    <span>{social.name}</span>
+                  </a>
+                </li>
               ))}
-            </div>
-          </div>
-
-          {/* Email Contact */}
-          <div className="contact-section">
-            <h4>Contact Me</h4>
-            <div className="contact-emails">
-              <a href="mailto:xmei59664@gmail.com" className="email-link">
-                <img src={EmailIcon} alt="Email" className="email-icon" />
-                <span>xmei59664@gmail.com</span>
-              </a>
-              <a
-                href="mailto:mei.xiaob@northeastern.edu"
-                className="email-link"
-              >
-                <img src={OutlookIcon} alt="Outlook" className="email-icon" />
-                <span>mei.xiaob@northeastern.edu</span>
-              </a>
-            </div>
+            </ul>
           </div>
         </div>
 
-        {/* Copyright */}
         <div className="footer-bottom">
-          <p>&copy; {currentYear} Xiaobin Mei. All rights reserved.</p>
-          <p>Design and built with React.js</p>
+          <p>
+            &copy; {currentYear} {site.name}. All rights reserved.
+          </p>
+          <p className="footer-credit">Designed and built with React.</p>
+          <a href="#home" className="footer-top-link">
+            Back to top
+            <ArrowUpIcon width="15" height="15" />
+          </a>
         </div>
       </div>
     </footer>

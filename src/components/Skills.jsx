@@ -1,127 +1,58 @@
-import { useEffect, useRef, useState } from "react";
 import "../components_css/Skills.css";
-import GitIcon from "../assets/icons/git.png";
-import RacketIcon from "../assets/icons/racket.png";
-import JavaIcon from "../assets/icons/java.png";
-import PythonIcon from "../assets/icons/python.png";
-import JavaScriptIcon from "../assets/icons/javascript.png";
-import HTMLIcon from "../assets/icons/html.png";
-import CSSIcon from "../assets/icons/css.png";
-import SwiftIcon from "../assets/icons/swift.png";
-import JUnitIcon from "../assets/icons/junit.png";
-import WebSocketIcon from "../assets/icons/websocket.png";
+import { skillCategories } from "../data/skills";
+import { useReveal } from "../hooks/useReveal";
+import SectionHeader from "./SectionHeader";
 
 function Skills() {
-  const sectionRef = useRef(null);
-  const [visible, setVisible] = useState(false);
+  const { ref, visible } = useReveal();
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  const devicon = (name) =>
-    `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${name}/${name}-original.svg`;
-
-  const categories = [
-    {
-      title: "Languages",
-      items: [
-        { name: "Java", icon: JavaIcon },
-        { name: "JavaScript", icon: JavaScriptIcon },
-        { name: "Python", icon: PythonIcon },
-        { name: "Swift", icon: SwiftIcon },
-        { name: "Racket", icon: RacketIcon },
-        { name: "HTML", icon: HTMLIcon },
-        { name: "CSS", icon: CSSIcon },
-      ],
-    },
-    {
-      title: "Development",
-      items: [
-        { name: "FastAPI", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/fastapi/fastapi-original.svg"},
-        { name: "React", icon: devicon("react") },
-        { name: "Spring Boot", icon: devicon("spring") },
-        { name: "Node.js", icon: devicon("nodejs") },
-        { name: "PostgreSQL", icon: devicon("postgresql") },
-        { name: "SQLite", icon: devicon("sqlite") },
-        { name: "WebSocket", icon: WebSocketIcon },
-        { name: "SwiftUI", icon: SwiftIcon },
-        { name: "Swing", icon: JavaIcon },
-      ],
-    },
-    {
-      title: "Testing & Tools",
-      items: [
-        { name: "AWS EC2", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" },
-        { name: "JUnit", icon: JUnitIcon },
-        { name: "Jest", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jest/jest-plain.svg" },
-        { name: "Pytest", icon: devicon("pytest") },
-        { name: "Git", icon: GitIcon },
-        { name: "Xcode", icon: devicon("xcode") },
-        { name: "LaTeX", icon: devicon("latex") },
-      ],
-    },
-  ];
-
-  let globalIndex = 0;
+  // Running index so the stagger flows across categories, not within each one.
+  let staggerIndex = 0;
 
   return (
-    <section id="skills" className="skills" ref={sectionRef}>
+    <section id="skills" className="section section--alt skills" ref={ref}>
       <div className="container">
-        <div className="section-header">
-          <h2>My Skills</h2>
-          <div className="divider"></div>
-          <p className="section-subtitle">
-            Here are the technologies and skills I've developed through
-            coursework, personal projects, and professional experience.
-          </p>
-        </div>
+        <SectionHeader
+          eyebrow="Skills"
+          title="Tools I build with"
+          subtitle="Technologies I've picked up through coursework, personal projects, and professional experience."
+        />
 
-        {categories.map((category) => (
-          <div className="skills-category" key={category.title}>
-            <h3 className="skills-category-title">{category.title}</h3>
-            <div className="skills-grid">
-              {category.items.map((item) => {
-                const delay = globalIndex * 0.08;
-                globalIndex++;
-                return (
-                  <div
-                    className={`skill-card ${visible ? "skill-card--visible" : ""}`}
-                    style={{ transitionDelay: `${delay}s` }}
-                    key={item.name}
-                  >
-                    {item.icon ? (
+        <div className={`skills-groups ${visible ? "is-visible" : ""}`}>
+          {skillCategories.map((category) => (
+            <div className="skills-group" key={category.title}>
+              <h3 className="skills-group-title">
+                {category.title}
+                <span className="skills-group-count">
+                  {category.items.length}
+                </span>
+              </h3>
+
+              <ul className="skills-grid">
+                {category.items.map((item) => {
+                  const delay = staggerIndex++;
+                  return (
+                    <li
+                      className="skill-chip reveal"
+                      style={{ "--reveal-i": delay }}
+                      key={`${category.title}-${item.name}`}
+                    >
                       <img
                         src={item.icon}
-                        alt={item.name}
-                        className="skill-card-icon"
+                        alt=""
+                        className="skill-chip-icon"
+                        width="24"
+                        height="24"
+                        loading="lazy"
                       />
-                    ) : (
-                      <div className="skill-card-letter">
-                        {item.name.charAt(0)}
-                      </div>
-                    )}
-                    <span className="skill-card-name">{item.name}</span>
-                  </div>
-                );
-              })}
+                      <span className="skill-chip-name">{item.name}</span>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
