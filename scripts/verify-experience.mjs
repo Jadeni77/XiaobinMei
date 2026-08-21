@@ -68,7 +68,42 @@ const collapsed = await evaluate(`(() => {
     timelineHeight: document.querySelector('.timeline').offsetHeight,
   };
 })()`);
-check("collapsed shows only two roles", collapsed.items === 2, `${collapsed.items} items`);
+check("collapsed renders two full roles plus a peek", collapsed.items === 3,
+  `${collapsed.items} items`);
+
+// The peek exists to hint the list continues, so it must be clipped, faded,
+// and unreachable — a half-visible card must never take focus.
+const peek = await evaluate(`(() => {
+  const el = document.querySelector('.timeline-item.is-peek');
+  if (!el) return null;
+  const full = document.querySelector('.timeline-item:not(.is-peek)');
+  const cs = getComputedStyle(el);
+  return {
+    height: Math.round(el.getBoundingClientRect().height),
+    fullHeight: Math.round(full.getBoundingClientRect().height),
+    masked: (cs.maskImage || cs.webkitMaskImage || "none") !== "none",
+    inert: el.hasAttribute('inert'),
+    ariaHidden: el.getAttribute('aria-hidden'),
+    focusables: el.querySelectorAll('button, a, summary, [tabindex]').length,
+  };
+})()`);
+check("peek row exists", peek !== null);
+check("peek is clipped well below a full row", peek.height < peek.fullHeight * 0.6,
+  `${peek.height}px vs ${peek.fullHeight}px`);
+check("peek fades out", peek.masked);
+check("peek is inert and hidden from assistive tech",
+  peek.inert === true && peek.ariaHidden === "true");
+
+// Prove inert actually removes it from the tab order rather than just being set.
+const tabLandsInPeek = await evaluate(`(() => {
+  const peekEl = document.querySelector('.timeline-item.is-peek');
+  const focusable = peekEl.querySelector('button, a, summary, [tabindex]');
+  if (!focusable) return false;
+  focusable.focus();
+  return peekEl.contains(document.activeElement);
+})()`);
+check("focus cannot enter the peek", tabLandsInPeek === false,
+  `${peek.focusables} focusable node(s) inside, all unreachable`);
 check("button names the remaining count", /more role/.test(collapsed.label ?? ""),
   collapsed.label);
 check("button reports collapsed state", collapsed.expanded === "false");
@@ -100,6 +135,10 @@ check("no revealed card left invisible", expanded.minCardOpacity > 0.9,
   `min opacity ${expanded.minCardOpacity}`);
 check("every role keeps its highlight disclosure", expanded.detailsCount === 6,
   `${expanded.detailsCount} disclosures`);
+check("expanding removes the peek treatment",
+  (await evaluate(`document.querySelectorAll('.timeline-item.is-peek').length`)) === 0);
+check("no expanded row is inert",
+  (await evaluate(`document.querySelectorAll('.timeline-item[inert]').length`)) === 0);
 
 /*
  * The real test of ScrollTrigger.refresh(): walk to the end of the longer list

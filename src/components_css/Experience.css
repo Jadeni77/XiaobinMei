@@ -238,11 +238,33 @@
   opacity: 0.65;
 }
 
+/* ---- Peek row ----
+   The row after the last full one renders clipped and fading, so the list
+   visibly continues instead of stopping dead above the button. */
+.timeline-item.is-peek {
+  max-height: 132px;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    rgba(0, 0, 0, 0.55) 45%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    rgba(0, 0, 0, 0.55) 45%,
+    transparent 100%
+  );
+}
+
 /* ---- Show more / fewer ---- */
 .timeline-more {
   display: flex;
   justify-content: center;
-  margin-top: var(--space-5);
+  /* Pulled up: the peek's fade already supplies the breathing room. */
+  margin-top: var(--space-3);
 }
 
 .timeline-more-chevron {

@@ -5,16 +5,27 @@ import { gsap, motion, ScrollTrigger, useGSAP } from "../lib/gsap";
 import SectionHeader from "./SectionHeader";
 import { ChevronDownIcon } from "./Icons";
 
-/** Roles shown before the visitor asks for more. */
+/** Roles shown in full before the visitor asks for more. */
 const COLLAPSED_COUNT = 2;
+
+/**
+ * One extra row renders clipped and fading beneath them. A hard cut at two
+ * gives no clue the list continues; a peek does the job the button alone
+ * cannot.
+ */
+const PEEK_COUNT = 1;
 
 function Experience() {
   const sectionRef = useRef(null);
   const railRef = useRef(null);
   const [expanded, setExpanded] = useState(false);
 
-  const shown = expanded ? experience : experience.slice(0, COLLAPSED_COUNT);
+  const shown = expanded
+    ? experience
+    : experience.slice(0, COLLAPSED_COUNT + PEEK_COUNT);
+  // The peek row is teased, not shown, so it still counts as hidden.
   const hiddenCount = experience.length - COLLAPSED_COUNT;
+  const isPeek = (i) => !expanded && i === COLLAPSED_COUNT;
 
   useGSAP(
     () => {
@@ -99,7 +110,15 @@ function Experience() {
           <span className="timeline-rail" ref={railRef} aria-hidden="true" />
 
           {shown.map((role, index) => (
-            <li className="timeline-item" key={role.id}>
+            <li
+              className={`timeline-item ${isPeek(index) ? "is-peek" : ""}`}
+              key={role.id}
+              /* The peek is a visual hint only: keep it out of the tab order
+                 and the accessibility tree, or Tab lands on a half-visible
+                 card's disclosure button. */
+              inert={isPeek(index)}
+              aria-hidden={isPeek(index) || undefined}
+            >
               <div className="timeline-marker" aria-hidden="true">
                 <span className="timeline-dot" />
               </div>
