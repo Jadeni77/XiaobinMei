@@ -78,7 +78,7 @@ export const isWorkTerm = (course) =>
 
 const allEntries = coursework.flatMap((term) => term.courses);
 
-// Derived so the About tiles can never drift out of sync with the list above.
+// Derived so the profile stat tiles can never drift out of sync with the list above.
 export const courseCount = allEntries.filter(
   (entry) => !isWorkTerm(entry)
 ).length;

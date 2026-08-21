@@ -14,7 +14,7 @@ export const site = {
 export const heroNames = ["Xiaobin Mei", "Jaden Mei", "梅晓彬"];
 
 export const navSections = [
-  { id: "about", label: "About" },
+  { id: "journey", label: "Journey" },
   { id: "experience", label: "Experience" },
   { id: "education", label: "Education" },
   { id: "skills", label: "Skills" },
