@@ -40,18 +40,6 @@ export const projects = [
   },
   {
     id: 3,
-    title: "Personal Portfolio Website",
-    blurb:
-      "This site. A responsive React portfolio with smooth navigation and project filtering.",
-    description:
-      "A responsive website built with React to showcase my projects, skills, and contact information. It features smooth navigation and project filtering.",
-    category: ["Web"],
-    technologies: ["React", "Vite", "CSS", "Git", "GitHub"],
-    github: "https://github.com/Jadeni77/myWeb",
-    projectImage: MyWeb,
-  },
-  {
-    id: 4,
     title: "LightEmAll",
     blurb:
       "A wire-rotation puzzle game in Java, built on ImpWorld with mutable state and event handlers.",
@@ -64,7 +52,7 @@ export const projects = [
     projectImage: LightEmAll,
   },
   {
-    id: 5,
+    id: 4,
     title: "Connections",
     blurb:
       "A word-grouping puzzle game in Java, driven by mouse and keyboard event handling.",
