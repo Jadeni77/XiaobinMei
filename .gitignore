@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 design-system/
+docs/
 
 # Editor directories and files
 .vscode/*
