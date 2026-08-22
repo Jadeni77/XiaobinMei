@@ -1,0 +1,72 @@
+/* ===== PROFILE STATS =====
+   Four at-a-glance facts, shown as a strip below the Journey carousel.
+   Migrated from the deleted About section. */
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-7);
+}
+
+.profile-stat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.profile-stat-icon {
+  color: var(--journey-accent, var(--accent));
+  margin-bottom: var(--space-2);
+  transition: color 600ms var(--ease-out);
+}
+
+.profile-stat-value {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.profile-stat-label {
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  color: var(--fg-subtle);
+}
+
+.profile-stat--link {
+  cursor: pointer;
+}
+
+.profile-stat-arrow {
+  position: absolute;
+  top: var(--space-5);
+  right: var(--space-5);
+  color: var(--fg-subtle);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+
+.profile-stat--link:hover .profile-stat-arrow,
+.profile-stat--link:focus-visible .profile-stat-arrow {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 1000px) {
+  .profile-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .profile-stat-value {
+    font-size: var(--text-xl);
+  }
+}

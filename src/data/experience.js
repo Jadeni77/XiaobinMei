@@ -1,0 +1,80 @@
+// Roles and programs, newest first. Add new entries at the top.
+export const experience = [
+  {
+    id: "software-engineer-intern",
+    role: "Software Engineer Intern",
+    org: "Chewy",
+    location: "Chewy, Boston, MA",
+    start: "June 2026",
+    end: "August 2026",
+    highlights: [
+      "Led the feature-flagged modernization of a 480,000-event-per-day OMS processor from split Node.js/TypeScript Lambda components to a consolidated Java/Spring Boot service on EKS, enabling zero-downtime migration and retirement of the legacy repository’s final service.",
+      "Uncovered a critical production data-loss defect silently dropping 500-600 failed messages daily and established the dead-letter-queue (DLQ) failure-handling architecture for the Java migration to preserve 100% of failed events for diagnosis and remediation.",
+      "Defined Dynatrace observability for the Java service tracking queue depth, DLQ depth, and error rate, with anomaly-detection criteria that alert via Slack on threshold breaches.",
+    ],
+  },
+  {
+    id: "ai-caring-research-assistant",
+    role: "AI-Caring Research Assistant Coop",
+    org: "Northeastern University",
+    location: "Northeastern University, Boston, MA",
+    start: "Jan 2026",
+    end: "June 2026",
+    highlights: [
+      "Developed a multi-component elderly care reminder system with a Python backend, Node.js WebSocket server, and Swift iOS app deployed across 40+ care homes.",
+      "Implemented real-time step tracking via the AgeWell API and built device health monitoring endpoints within the WebSocket server for remote diagnostics across deployed devices.",
+      "Provisioned AWS EC2 instances managed via PM2 to replicate the production environment, enabling isolated testing and validation of system functionality.",
+    ],
+  },
+  {
+    id: "nuview-marketing",
+    role: "Digital Marketing Experiential Workshop",
+    org: "NUView",
+    location: "Northeastern University, Boston, MA",
+    start: "May 2025",
+    end: "June 2025",
+    highlights: [
+      "Developed a social media marketing strategy to raise awareness of Saxbys' student-run cafe model.",
+      "Conducted market research and built slide decks to present marketing recommendations to the project sponsor.",
+      "Collaborated with a team of four to position Saxbys as a meaningful career opportunity, not just a coffee shop.",
+    ],
+  },
+  {
+    id: "ai-bootcamp",
+    role: "AI Bootcamp",
+    org: "NU Artificial Intelligence Club",
+    location: "Northeastern University, Boston, MA",
+    start: "January 2025",
+    end: "March 2025",
+    highlights: [
+      "Learned the fundamental concepts of machine learning under experienced mentors and club members.",
+      "Applied those concepts through hands-on coding projects in Google Colab.",
+    ],
+  },
+  {
+    id: "caps-intern",
+    role: "College Access and Post-Secondary Success (CAPS) Assistant Intern",
+    org: "Youth Center, Boston Chinatown Neighborhood Center (BCNC)",
+    location: "Quincy / Boston, MA",
+    start: "September 2024",
+    end: "August 2025",
+    highlights: [
+      "Guided students through key steps of the college application process, including building resumes and writing personal statements.",
+      "Hosted SAT bootcamps to strengthen test-taking skills and improve scores.",
+      "Translated workshop content into Chinese to support newly immigrated students' understanding.",
+    ],
+  },
+  {
+    id: "quincy-coders",
+    role: "Teacher Assistant Intern",
+    org: "Quincy Coders, Boston Chinatown Neighborhood Center (BCNC)",
+    location: "Quincy, MA",
+    start: "July 2024",
+    end: "August 2024",
+    highlights: [
+      "Assisted supervisors in preparing and reviewing coding/STEM projects before program launch.",
+      "Guided children (ages 8–12) through hands-on coding and STEM activities, including 3D printing and the Scratch programming language.",
+      "Helped ensure a fun, engaging, and safe learning environment for all participants.",
+    ],
+  },
+];

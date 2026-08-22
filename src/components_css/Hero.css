@@ -1,136 +1,220 @@
-/* ===== HERO SECTION ===== */
+/* ===== HERO ===== */
 .hero {
-  padding: 150px 0 80px;
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-}
-
-.hero-container {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 50px;
+  min-height: min(92svh, 900px);
+  padding-block: calc(var(--nav-h) + var(--space-7)) var(--space-8);
+  overflow: hidden;
 }
 
-.hero-content {
-  flex: 1;
+/* Soft accent wash behind the portrait — decorative only */
+.hero-glow {
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: min(720px, 80vw);
+  aspect-ratio: 1;
+  background: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--accent) 16%, transparent) 0%,
+    transparent 65%
+  );
+  pointer-events: none;
+}
+
+.hero-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(var(--space-6), 5vw, var(--space-8));
+  align-items: center;
+}
+
+/* ---- Copy ---- */
+.hero-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--fg-muted);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+}
+
+.hero-status-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  background-color: var(--success);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 22%, transparent);
+  animation: status-pulse 2.4s var(--ease-in-out) infinite;
+}
+
+@keyframes status-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
 }
 
 .hero-title {
-  font-size: 3rem;
-  margin-bottom: 15px;
-  line-height: 1.2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
 }
 
-.hero-subtitle {
-  font-size: 1.8rem;
-  color: var(--gray);
-  margin-bottom: 20px;
+.hero-greeting {
+  font-size: var(--text-xl);
+  font-weight: 400;
+  color: var(--fg-muted);
+  letter-spacing: 0;
+}
+
+.hero-name {
+  /* CJK stack so 梅晓彬 renders with real glyphs, not tofu */
+  font-family: var(--font-cjk);
+  font-size: var(--text-5xl);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg);
+  /* Reserve the line so cycling names cannot shift the layout (CLS) */
+  min-height: 1.15em;
+  /*
+   * A gradient with background-clip: text cannot be used here: SplitText wraps
+   * each glyph in its own span and transforms it, which detaches the glyphs
+   * from the parent's clip region and breaks the fill.
+   */
+  /* text-wrap: balance interferes with SplitText's line measurement */
+  text-wrap: normal;
+  /* Stops per-character kerning from shifting when the text is split */
+  font-kerning: none;
+  /* rotateX on the characters needs depth to read as a flip */
+  perspective: 600px;
+}
+
+.hero-role {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 500;
+  color: var(--fg);
+  margin-bottom: var(--space-4);
 }
 
 .hero-description {
-  font-size: 1.1rem;
-  color: var(--gray);
-  margin-bottom: 30px;
-  max-width: 600px;
+  max-width: 52ch;
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: var(--fg-muted);
+}
+
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+
+.hero-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--fg-subtle);
 }
 
 .hero-buttons {
   display: flex;
-  gap: 15px;
-  margin-top: 30px;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
 }
 
-.hero-image-container {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  max-width: 450px;
-  width: 100%;
-}
-
-.hero-image {
+/* ---- Portrait ---- */
+.hero-portrait {
   position: relative;
+  justify-self: center;
+  width: min(100%, 380px);
 }
 
-.profile-image {
-  width: 450px;
-  height: 450px;
-  background-color: var(--light-gray);
-  border-radius: 50%;
-  display: block;
-  align-items: center;
-  justify-content: center;
-  border: 5px solid var(--white);
-  box-shadow: var(--shadow);
+.hero-portrait-frame {
+  position: relative;
+  z-index: 1;
   overflow: hidden;
+  aspect-ratio: 4 / 5;
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--dur-slow) var(--ease-out);
 }
 
-.profile-image img {
+.hero-portrait:hover .hero-portrait-frame {
+  transform: translateY(-6px);
+}
+
+.hero-portrait-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.badge {
+/* Offset accent block behind the photo — gives depth without a drop shadow */
+.hero-portrait-shape {
   position: absolute;
-  bottom: 20px;
-  right: 0;
-  background-color: var(--warning);
-  color: var(--white);
-  padding: 8px 15px;
-  border-radius: 5px;
-  font-weight: 600;
-  animation: pulse 2s infinite;
-}
-
-/* ===== TYPEWRITER ===== */
-.hero-name {
-  display: inline-block;
-  min-width: 1ch;
-}
-
-.hero-cursor {
-  display: inline-block;
-  width: 3px;
-  height: 1em;
-  background-color: var(--primary);
-  margin-left: 2px;
-  vertical-align: text-bottom;
-  animation: blink 0.7s step-end infinite;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  inset: var(--space-5) calc(-1 * var(--space-4)) calc(-1 * var(--space-5))
+    var(--space-5);
+  background-color: var(--accent);
+  border-radius: var(--radius-xl);
+  opacity: 0.14;
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .hero-container {
-    flex-direction: column;
+@media (max-width: 900px) {
+  .hero {
+    min-height: 0;
+    padding-block: calc(var(--nav-h) + var(--space-6)) var(--space-7);
   }
 
-  .hero-image-container {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-7);
+  }
+
+  /* Portrait first on narrow screens reads as a proper introduction */
+  .hero-portrait {
     order: -1;
-    margin-bottom: 30px;
+    width: min(100%, 260px);
+    justify-self: start;
   }
 
-  .hero-image-container,
-  .profile-image {
-    max-width: 300px;
-    height: 300px;
+  .hero-description {
+    max-width: none;
   }
 }
 
-@media (max-width: 480px) {
-  .hero-title {
-    font-size: 2.2rem;
+@media (max-width: 600px) {
+  .hero-portrait {
+    width: 200px;
   }
 
-  .hero-subtitle {
-    font-size: 1.4rem;
+  .hero-portrait-shape {
+    inset: var(--space-4) calc(-1 * var(--space-3)) calc(-1 * var(--space-4))
+      var(--space-4);
   }
 
-  .hero-buttons {
-    flex-direction: column;
+  .hero-buttons .btn {
+    flex: 1 1 auto;
   }
 }
