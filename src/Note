@@ -1,3 +1,38 @@
+Deployment
+==========
+Live at https://xiaobinmei.com (GitHub Pages, gh-pages branch).
+
+Custom domain setup (already done — recorded for reference):
+* public/CNAME contains "xiaobinmei.com". It MUST live in public/, not just in
+  GitHub's Settings UI: `gh-pages -d dist` removes files absent from dist on
+  every deploy, so a CNAME written by the UI gets wiped. Vite copies public/*
+  into dist/ verbatim.
+* vite.config.js uses base: '/'. A custom domain serves from the root, so the
+  old '/XiaobinMei/' subpath would 404 every asset and render a blank page.
+* DNS at the registrar:
+    apex  xiaobinmei.com   A     185.199.108.153
+                                 185.199.109.153
+                                 185.199.110.153
+                                 185.199.111.153
+                           AAAA  2606:50c0:8000::153
+                                 2606:50c0:8001::153
+                                 2606:50c0:8002::153
+                                 2606:50c0:8003::153
+    www                    CNAME jadeni77.github.io
+* GitHub: Settings -> Pages -> Custom domain = xiaobinmei.com, Enforce HTTPS on.
+
+To deploy
+=========
+* npm run deploy      (runs the build first via predeploy)
+
+Local dev
+=========
+* npm run dev         -> http://localhost:5173/   (root now, not /XiaobinMei/)
+* npm test            -> vitest
+* npm run lint
+
+
+Previous:
 To Deploy:
 * Add "homepage": "https://jadeni77.github.io/XiaobinMei" (or "homepage": "link") in package.json.
 * Add base: '/XiaobinMei/' or (base: '/repo name/') to vite.config.js.

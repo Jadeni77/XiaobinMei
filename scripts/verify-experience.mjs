@@ -6,13 +6,13 @@
  *   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
  *     --headless=new --disable-gpu --no-sandbox --hide-scrollbars \
  *     --remote-debugging-port=9222 --user-data-dir=/tmp/exp-verify about:blank &
- *   CDP_PORT=9222 APP_URL=http://localhost:5173/XiaobinMei/ node scripts/verify-experience.mjs
+ *   CDP_PORT=9222 APP_URL=http://localhost:5173/ node scripts/verify-experience.mjs
  *
  * Real wall-clock timing over CDP: GSAP's rAF ticker does not advance under
  * Chrome's --virtual-time-budget.
  */
 const PORT = process.env.CDP_PORT ?? "9222";
-const APP = process.env.APP_URL ?? "http://localhost:5173/XiaobinMei/";
+const APP = process.env.APP_URL ?? "http://localhost:5173/";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const targets = await (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json();

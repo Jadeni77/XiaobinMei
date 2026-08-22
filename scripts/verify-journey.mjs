@@ -6,14 +6,14 @@
  *   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
  *     --headless=new --disable-gpu --no-sandbox --hide-scrollbars \
  *     --remote-debugging-port=9222 --user-data-dir=/tmp/journey-verify about:blank &
- *   CDP_PORT=9222 APP_URL=http://localhost:5173/XiaobinMei/ node scripts/verify-journey.mjs
+ *   CDP_PORT=9222 APP_URL=http://localhost:5173/ node scripts/verify-journey.mjs
  *
  * Uses real wall-clock timing over CDP. GSAP's requestAnimationFrame ticker
  * does NOT advance under Chrome's --virtual-time-budget, which silently freezes
  * animations a few frames in and produces false failures.
  */
 const PORT = process.env.CDP_PORT ?? "9222";
-const APP = process.env.APP_URL ?? "http://localhost:5173/XiaobinMei/";
+const APP = process.env.APP_URL ?? "http://localhost:5173/";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const targets = await (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json();
