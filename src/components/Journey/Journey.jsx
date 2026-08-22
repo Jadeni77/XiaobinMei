@@ -9,6 +9,7 @@ import JourneyCard from "./JourneyCard";
 import JourneyTrajectory from "./JourneyTrajectory";
 import ProfileStats from "./ProfileStats";
 import { useCarousel } from "./useCarousel";
+import { cardDistance } from "./carouselMath";
 import { usePrefersReducedMotion } from "../../hooks/useReveal";
 
 function Journey() {
@@ -23,7 +24,6 @@ function Journey() {
     atStart,
     atEnd,
     handleWheel,
-    shouldSuppressClick,
     regionProps,
   } = useCarousel(journey.length);
 
@@ -156,15 +156,10 @@ function Journey() {
             <JourneyCard
               key={milestone.id}
               milestone={milestone}
-              distance={i - index - dragOffset}
+              distance={cardDistance(i, index, dragOffset)}
               isActive={i === index}
               position={i + 1}
               total={journey.length}
-              /* Guarded so releasing a drag over a side card does not also
-                 count as selecting it. */
-              onSelect={() => {
-                if (!shouldSuppressClick()) go(i);
-              }}
               /* Only the centre deck cycles: off-centre cards are small,
                  desaturated, and on phones fully transparent, so animating
                  them is invisible work. */

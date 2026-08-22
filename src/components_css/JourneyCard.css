@@ -21,9 +21,19 @@
     filter 650ms var(--ease-out), border-color 500ms var(--ease-out);
 }
 
+/* While dragging, the transform must track the pointer directly. Leaving the
+   650ms ease in place meant every frame was chased by an animation and the
+   cards visibly lagged behind the finger. */
+.journey-stage.is-dragging .journey-card {
+  transition: none;
+}
+
+/* No cursor: pointer here. Off-centre cards are `inert`, which swallows
+   clicks before any handler runs, so a pointer cursor advertised an
+   interaction that could never fire. Navigation is the pips, arrows, drag,
+   and keyboard. */
 .journey-card:not(.is-active) {
   filter: saturate(0.5) brightness(0.98);
-  cursor: pointer;
 }
 
 @media (prefers-color-scheme: dark) {

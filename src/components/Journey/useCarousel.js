@@ -8,9 +8,6 @@ import {
 
 const WHEEL_COOLDOWN_MS = 320;
 
-/** Pointer travel beyond this means the gesture was a drag, not a tap. */
-const CLICK_SUPPRESS_PX = 6;
-
 /**
  * Headless carousel input. Owns the active index and every way of changing it
  * — buttons, keyboard, pointer drag, horizontal wheel — and knows nothing
@@ -24,7 +21,6 @@ export function useCarousel(count) {
   const dragStartX = useRef(0);
   const dragDx = useRef(0);
   const wheelLocked = useRef(false);
-  const suppressClick = useRef(false);
 
   const go = useCallback((n) => setIndex(clampIndex(n, count)), [count]);
   const next = useCallback(() => setIndex((i) => clampIndex(i + 1, count)), [count]);
@@ -68,7 +64,6 @@ export function useCarousel(count) {
     if (event.target.closest?.("button, a")) return;
     dragStartX.current = event.clientX;
     dragDx.current = 0;
-    suppressClick.current = false;
     setIsDragging(true);
     event.currentTarget.setPointerCapture?.(event.pointerId);
   }, []);
@@ -97,13 +92,8 @@ export function useCarousel(count) {
 
     setIsDragging(false);
     setDragOffset(0);
-    // A real drag must not also fire the click that lands on a side card.
-    suppressClick.current = Math.abs(dx) > CLICK_SUPPRESS_PX;
     setIndex((i) => commitDrag(dx, i, count));
   }, [count, isDragging]);
-
-  /** True when the last pointer gesture was a drag rather than a tap. */
-  const shouldSuppressClick = useCallback(() => suppressClick.current, []);
 
   return {
     index,
@@ -115,7 +105,6 @@ export function useCarousel(count) {
     atStart: index === 0,
     atEnd: index === count - 1,
     handleWheel,
-    shouldSuppressClick,
     // Spread onto the stage element.
     regionProps: {
       tabIndex: 0,

@@ -153,7 +153,12 @@ function Hero() {
               The visible name cycles and is split into characters, so it is
               hidden from assistive tech and a stable name announced instead.
             */}
-            <span className="hero-name" ref={nameRef} aria-hidden="true">
+            <span
+              className="hero-name"
+              key={currentName}
+              ref={nameRef}
+              aria-hidden="true"
+            >
               {currentName}
             </span>
             <span className="visually-hidden">{site.name}</span>

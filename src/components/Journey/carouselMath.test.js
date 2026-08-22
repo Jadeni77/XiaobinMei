@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  DRAG_DIVISOR,
   DRAG_THRESHOLD,
+  cardDistance,
   cardTransform,
   clampIndex,
   commitDrag,
@@ -62,5 +64,45 @@ describe("cardTransform", () => {
 
   it("hides cards beyond the visible span", () => {
     expect(cardTransform(3).opacity).toBe(0);
+  });
+
+});
+
+/**
+ * The drag preview must travel WITH the finger. Journey.jsx did this inline
+ * with the sign flipped, so cards slid the wrong way during every drag and no
+ * unit test could see it. Extracting it makes the sign assertable.
+ */
+describe("cardDistance", () => {
+  const xOf = (d) =>
+    Number(cardTransform(d).transform.match(/translate3d\(([-0-9.]+)px/)[1]);
+
+  it("is zero for the active card at rest", () => {
+    expect(cardDistance(2, 2)).toBe(0);
+  });
+
+  it("places later cards to the right, earlier ones to the left", () => {
+    expect(cardDistance(3, 2)).toBe(1);
+    expect(cardDistance(1, 2)).toBe(-1);
+  });
+
+  it("drags the active card LEFT when the finger moves left", () => {
+    const d = cardDistance(2, 2, -150 / DRAG_DIVISOR);
+    expect(d).toBeLessThan(0);
+    expect(xOf(d)).toBeLessThan(0);
+  });
+
+  it("drags the active card RIGHT when the finger moves right", () => {
+    const d = cardDistance(2, 2, 150 / DRAG_DIVISOR);
+    expect(d).toBeGreaterThan(0);
+    expect(xOf(d)).toBeGreaterThan(0);
+  });
+
+  it("keeps the preview continuous with where the drag commits", () => {
+    // Dragging left far enough advances the index, so the active card ends up
+    // one slot to the left. The preview must already be heading that way.
+    const preview = cardDistance(2, 2, -0.9);
+    const committed = cardDistance(2, 3);
+    expect(Math.sign(preview)).toBe(Math.sign(committed));
   });
 });

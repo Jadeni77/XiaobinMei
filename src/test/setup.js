@@ -1,3 +1,4 @@
+import "@testing-library/jest-dom/vitest";
 import "@testing-library/react";
 
 // jsdom has no matchMedia; GSAP's matchMedia guards and usePrefersReducedMotion

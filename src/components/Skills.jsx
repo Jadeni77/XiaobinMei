@@ -4,7 +4,7 @@ import { useReveal } from "../hooks/useReveal";
 import SectionHeader from "./SectionHeader";
 
 function Skills() {
-  const { ref, visible } = useReveal();
+  const { ref, visible } = useReveal({ threshold: 0.05 });
 
   // Running index so the stagger flows across categories, not within each one.
   let staggerIndex = 0;

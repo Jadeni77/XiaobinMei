@@ -4,7 +4,7 @@ export const experience = [
     id: "software-engineer-intern",
     role: "Software Engineer Intern",
     org: "Chewy",
-    location: "Chewy, Boston, MA",
+    location: "Boston, MA",
     start: "June 2026",
     end: "August 2026",
     highlights: [
@@ -17,7 +17,7 @@ export const experience = [
     id: "ai-caring-research-assistant",
     role: "AI-Caring Research Assistant Coop",
     org: "Northeastern University",
-    location: "Northeastern University, Boston, MA",
+    location: "Boston, MA",
     start: "Jan 2026",
     end: "June 2026",
     highlights: [

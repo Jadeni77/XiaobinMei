@@ -12,38 +12,10 @@
  * does NOT advance under Chrome's --virtual-time-budget, which silently freezes
  * animations a few frames in and produces false failures.
  */
-const PORT = process.env.CDP_PORT ?? "9222";
+import { connect, sleep } from "./cdp.mjs";
+
 const APP = process.env.APP_URL ?? "http://localhost:5173/";
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-const targets = await (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json();
-const ws = new WebSocket(targets.find((t) => t.type === "page").webSocketDebuggerUrl);
-await new Promise((resolve) => (ws.onopen = resolve));
-
-let seq = 0;
-const pending = new Map();
-ws.onmessage = (event) => {
-  const msg = JSON.parse(event.data);
-  if (msg.id && pending.has(msg.id)) {
-    pending.get(msg.id)(msg);
-    pending.delete(msg.id);
-  }
-};
-const send = (method, params = {}) =>
-  new Promise((resolve) => {
-    const id = ++seq;
-    pending.set(id, resolve);
-    ws.send(JSON.stringify({ id, method, params }));
-  });
-const evaluate = async (expression) =>
-  (await send("Runtime.evaluate", { expression, returnByValue: true, awaitPromise: true }))
-    .result?.result?.value;
-
-const results = [];
-const check = (name, pass, detail) => {
-  results.push({ name, pass });
-  console.log(`${pass ? "PASS" : "FAIL"}  ${name}${detail ? ` — ${detail}` : ""}`);
-};
+const { send, evaluate, check, guard, finish } = await connect();
 
 await send("Page.enable");
 await send("Runtime.enable");
@@ -55,6 +27,23 @@ await sleep(3000);
 await evaluate(`document.documentElement.style.scrollBehavior='auto';
   document.getElementById('journey').scrollIntoView()`);
 await sleep(1500);
+
+/*
+ * 0. The hero name must actually cycle. It silently froze on heroNames[0] for
+ *    weeks: SplitText.revert() restored the innerHTML captured at split time,
+ *    overwriting the name React had just committed. Nothing caught it because
+ *    heroNames[0] === site.name, so the heading always looked plausible.
+ */
+const seen = new Set();
+for (let i = 0; i < 10; i += 1) {
+  seen.add(await evaluate(`document.querySelector('.hero-name')?.textContent.trim()`));
+  await sleep(1200);
+}
+check("hero name cycles through every spelling", seen.size >= 3,
+  `saw ${seen.size}: ${[...seen].join(", ")}`);
+
+await evaluate(`document.getElementById('journey').scrollIntoView()`);
+await sleep(1200);
 
 // 1. Plotted points are circles, not ellipses (the stretched-viewBox regression).
 const round = await evaluate(`(() => {
@@ -148,6 +137,33 @@ check("trajectory pans to centre the active point", /translateX/.test(advanced.p
 check("pip click selects the last milestone",
   advanced.activeIndex === milestoneCount - 1,
   `index ${advanced.activeIndex} of ${milestoneCount}`);
+
+/*
+ * 5b. The drag preview must travel WITH the pointer. The distance calculation
+ *     had its sign flipped, so cards slid the opposite way and then jumped
+ *     backwards on release. Unit tests only covered the committed index.
+ */
+await evaluate(`document.querySelectorAll('.journey-pips button')[2].click()`);
+await sleep(1300);
+const stageMid = await evaluate(`(() => {
+  const r = document.querySelector('.journey-stage').getBoundingClientRect();
+  return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + 40) };
+})()`);
+const cardX = () =>
+  evaluate(`Number(document.querySelector('.journey-card.is-active')
+    .style.transform.match(/translate3d\\(([-0-9.]+)px/)?.[1] ?? 0)`);
+
+await send("Input.dispatchMouseEvent", { type: "mousePressed", x: stageMid.x, y: stageMid.y, button: "left", clickCount: 1 });
+await sleep(140);
+await send("Input.dispatchMouseEvent", { type: "mouseMoved", x: stageMid.x - 60, y: stageMid.y, button: "left" });
+await sleep(140);
+await send("Input.dispatchMouseEvent", { type: "mouseMoved", x: stageMid.x - 140, y: stageMid.y, button: "left" });
+await sleep(160);
+const draggedX = await cardX();
+await send("Input.dispatchMouseEvent", { type: "mouseReleased", x: stageMid.x - 140, y: stageMid.y, button: "left", clickCount: 1 });
+await sleep(1200);
+check("drag preview follows the pointer", draggedX < 0,
+  `pointer moved left, card translateX ${draggedX}px`);
 
 // 6. No horizontal overflow at any breakpoint.
 for (const width of [390, 768, 1024, 1440]) {
@@ -337,7 +353,4 @@ const scrollAfter = await evaluate(`window.scrollY`);
 check("phone: vertical touch still scrolls the page", scrollAfter !== scrollBefore,
   `scrollY ${Math.round(scrollBefore)} -> ${Math.round(scrollAfter)}`);
 
-const failed = results.filter((r) => !r.pass);
-console.log(`\n${results.length - failed.length}/${results.length} checks passed`);
-ws.close();
-process.exit(failed.length ? 1 : 0);
+process.exit(finish() ? 0 : 1);
