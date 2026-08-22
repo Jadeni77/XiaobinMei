@@ -104,11 +104,28 @@ const wheel = await evaluate(`(() => {
 check("vertical wheel passes through to the page", wheel.vertical === false);
 check("horizontal wheel is claimed by the carousel", wheel.horizontal === true);
 
-// 5. Advancing draws the curve, moves the accent, and pans the trajectory.
+/*
+ * 5. Advancing draws the curve, moves the accent, and pans the trajectory.
+ *
+ * Re-navigate first: section 4's wheel test intentionally moves the index, and
+ * the milestone count is read from the DOM rather than hardcoded, so adding a
+ * milestone to journey.js cannot silently invalidate this.
+ */
+await send("Page.navigate", { url: APP });
+await sleep(2600);
+await evaluate(`document.documentElement.style.scrollBehavior='auto';
+  document.getElementById('journey').scrollIntoView()`);
+await sleep(1200);
+
+const milestoneCount = await evaluate(
+  `document.querySelectorAll('.journey-pips button').length`
+);
 const startAccent = await evaluate(
   `getComputedStyle(document.querySelector('.journey')).getPropertyValue('--journey-accent').trim()`
 );
-await evaluate(`document.querySelectorAll('.journey-pips button')[4].click()`);
+await evaluate(
+  `document.querySelectorAll('.journey-pips button')[${milestoneCount - 1}].click()`
+);
 await sleep(1600);
 const advanced = await evaluate(`(() => {
   const curve = document.querySelector('.journey-curve');
@@ -123,13 +140,14 @@ const advanced = await evaluate(`(() => {
   };
 })()`);
 check("curve draws to the end at the last milestone", advanced.drawn > 0.95,
-  `drawn ${advanced.drawn}`);
+  `drawn ${advanced.drawn} at milestone ${milestoneCount} of ${milestoneCount}`);
 check("accent changes per milestone", advanced.accent !== startAccent,
   `${startAccent} -> ${advanced.accent}`);
 check("trajectory pans to centre the active point", /translateX/.test(advanced.pan),
   advanced.pan);
-check("pip click selects the last milestone", advanced.activeIndex === 4,
-  `index ${advanced.activeIndex}`);
+check("pip click selects the last milestone",
+  advanced.activeIndex === milestoneCount - 1,
+  `index ${advanced.activeIndex} of ${milestoneCount}`);
 
 // 6. No horizontal overflow at any breakpoint.
 for (const width of [390, 768, 1024, 1440]) {
@@ -175,7 +193,7 @@ const reducedPhotoBefore = await evaluate(`(() => {
   return [...c.querySelectorAll('.journey-thumbs button')]
     .findIndex(b => b.classList.contains('is-on'));
 })()`);
-await sleep(4800);
+await sleep(3600);
 const reducedPhotoAfter = await evaluate(`(() => {
   const c = document.querySelector('.journey-card.is-active');
   return [...c.querySelectorAll('.journey-thumbs button')]
@@ -201,9 +219,21 @@ const activePhoto = () =>
       .findIndex(b => b.classList.contains('is-on'));
   })()`);
 
+/*
+ * Poll rather than sleep a fixed interval: the hold is PHOTO_HOLD_MS in
+ * JourneyCard.jsx and tuning it should not break this check.
+ */
+const waitForPhotoChange = async (from, budgetMs = 9000) => {
+  for (let waited = 0; waited < budgetMs; waited += 250) {
+    await sleep(250);
+    const now = await activePhoto();
+    if (now !== from) return now;
+  }
+  return from;
+};
+
 const photoBefore = await activePhoto();
-await sleep(4800);
-const photoAfter = await activePhoto();
+const photoAfter = await waitForPhotoChange(photoBefore);
 check("centre deck auto-advances", photoAfter !== photoBefore,
   `photo ${photoBefore} -> ${photoAfter}`);
 
@@ -216,23 +246,24 @@ check("off-centre decks do not cycle", offCentre.every((v) => v === 0),
 await evaluate(`document.querySelector('.journey-card.is-active .journey-thumbs button').click()`);
 await sleep(300);
 const pinned = await activePhoto();
-await sleep(5200);
+// Fixed wait, and it must exceed PHOTO_HOLD_MS to prove nothing moved.
+await sleep(5000);
 check("clicking a thumbnail pins that deck", (await activePhoto()) === pinned,
-  `held on ${pinned}`);
+  `held on ${pinned} for 5s`);
 
 await evaluate(`document.querySelectorAll('.journey-pips button')[1].click()`);
 await sleep(1200);
 const otherBefore = await activePhoto();
-await sleep(4800);
-check("other decks keep autoplaying", (await activePhoto()) !== otherBefore,
+check("other decks keep autoplaying",
+  (await waitForPhotoChange(otherBefore)) !== otherBefore,
   "unaffected by the pause");
 
 await evaluate(`document.querySelectorAll('.journey-pips button')[0].click()`);
 await sleep(1200);
 const returned = await activePhoto();
-await sleep(4800);
+await sleep(5000);
 check("pause is remembered per deck", (await activePhoto()) === returned,
-  `still held on ${returned}`);
+  `still held on ${returned} for 5s`);
 
 // 9. Phone: real touch emulation. A synthetic swipe caught a bug that mouse
 //    testing and the unit tests both missed, so these checks stay permanent.
