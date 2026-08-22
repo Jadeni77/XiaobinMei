@@ -1,3 +1,11 @@
+/**
+ * One project: thumbnail, title, blurb, a disclosure for the long description,
+ * technology tags, and a repository link.
+ *
+ * Filtered-out cards stay mounted with display:none, which also drops them from
+ * the accessibility tree. Nothing overlays the thumbnail — category pills used
+ * to sit on top of the screenshot they were describing.
+ */
 import "../components_css/ProjectCard.css";
 import { ExternalLinkIcon, GithubIcon } from "./Icons";
 

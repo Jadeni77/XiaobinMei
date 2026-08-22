@@ -1,3 +1,15 @@
+/**
+ * Filterable project grid.
+ *
+ * Filtering is a two-phase crossfade: the grid fades out with every card still
+ * present, the filter swaps while it is invisible so the reflow is hidden, then
+ * the new cards fade up staggered. Deliberately no positional animation — FLIP
+ * made cards travel the full width and height of the grid, which read as
+ * sliding.
+ *
+ * The container height is animated because the row count changes the instant
+ * React commits, and the CTA below would otherwise snap up the page.
+ */
 import { useRef, useState } from "react";
 import "../components_css/Projects.css";
 import ProjectCard from "./ProjectCard";

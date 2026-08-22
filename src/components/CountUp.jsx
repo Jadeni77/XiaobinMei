@@ -1,3 +1,9 @@
+/**
+ * Animates a number from zero when it scrolls into view.
+ *
+ * Non-numeric values (for example "CS + Math") render unchanged, so the same
+ * component can back every stat tile.
+ */
 import { useRef } from "react";
 import { gsap, useGSAP } from "../lib/gsap";
 

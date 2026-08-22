@@ -1,3 +1,9 @@
+/**
+ * Technology chips, grouped by category.
+ *
+ * Brand logos come from local PNGs where colour matters and from the devicon
+ * CDN otherwise, so the repo does not carry an icon for every technology.
+ */
 import GitIcon from "../assets/icons/git.png";
 import RacketIcon from "../assets/icons/racket.png";
 import JavaIcon from "../assets/icons/java.png";

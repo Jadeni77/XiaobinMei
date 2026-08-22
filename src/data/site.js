@@ -1,3 +1,10 @@
+/**
+ * Identity, contact details, and the section list.
+ *
+ * navSections is the single source of truth for site navigation: the navbar
+ * renders it, the scroll-spy derives its target ids from it, and the footer
+ * echoes it. Adding a section here wires all three.
+ */
 export const site = {
   name: "Xiaobin Mei",
   nickname: "Jaden",

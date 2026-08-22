@@ -1,3 +1,10 @@
+/**
+ * Shared eyebrow + title + subtitle block used by every section.
+ *
+ * The title animates in as masked lines via SplitText. `autoSplit` re-splits
+ * when the webfont finishes loading, so line boxes are never measured against
+ * the fallback face.
+ */
 import { useRef } from "react";
 import { gsap, SplitText, useGSAP } from "../lib/gsap";
 

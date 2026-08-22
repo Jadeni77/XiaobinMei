@@ -1,3 +1,17 @@
+/**
+ * "My Journey" section: a coverflow carousel of chronological milestones over a
+ * plotted-trajectory backdrop, with the profile stat strip beneath.
+ *
+ * Composition: this shell owns the accent theming, the GSAP entrance for the
+ * active card, and the non-passive wheel listener. Index state and every input
+ * path live in useCarousel; placement maths lives in carouselMath.
+ *
+ * The accent is set on this section element, never on body, or each milestone's
+ * colour would leak into the navbar and every other section.
+ *
+ * Journey is the personal register — first person, what a year felt like. The
+ * professional record belongs in Experience.
+ */
 import { useCallback, useEffect, useRef, useState } from "react";
 import "../../components_css/Journey.css";
 import SectionHeader from "../SectionHeader";
