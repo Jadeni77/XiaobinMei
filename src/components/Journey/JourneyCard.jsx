@@ -3,7 +3,7 @@ import "../../components_css/JourneyCard.css";
 import { cardTransform } from "./carouselMath";
 
 /** How long each photo holds before the deck advances. */
-const PHOTO_HOLD_MS = 4000;
+const PHOTO_HOLD_MS = 3000;
 
 function JourneyCard({
   milestone,
