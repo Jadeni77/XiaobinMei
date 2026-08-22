@@ -16,13 +16,10 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
 
 /** Shared durations/eases so GSAP motion matches the CSS tokens. */
 export const motion = {
-  fast: 0.15,
-  base: 0.25,
   slow: 0.4,
   settle: 0.55,
   ease: "power2.inOut",
   easeOut: "power3.out",
-  easeBack: "back.out(1.4)",
 };
 
 /** True when the visitor has asked the OS to reduce motion. */

@@ -11,38 +11,10 @@
  * Real wall-clock timing over CDP: GSAP's rAF ticker does not advance under
  * Chrome's --virtual-time-budget.
  */
-const PORT = process.env.CDP_PORT ?? "9222";
+import { connect, sleep } from "./cdp.mjs";
+
 const APP = process.env.APP_URL ?? "http://localhost:5173/";
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-const targets = await (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json();
-const ws = new WebSocket(targets.find((t) => t.type === "page").webSocketDebuggerUrl);
-await new Promise((resolve) => (ws.onopen = resolve));
-
-let seq = 0;
-const pending = new Map();
-ws.onmessage = (event) => {
-  const msg = JSON.parse(event.data);
-  if (msg.id && pending.has(msg.id)) {
-    pending.get(msg.id)(msg);
-    pending.delete(msg.id);
-  }
-};
-const send = (method, params = {}) =>
-  new Promise((resolve) => {
-    const id = ++seq;
-    pending.set(id, resolve);
-    ws.send(JSON.stringify({ id, method, params }));
-  });
-const evaluate = async (expression) =>
-  (await send("Runtime.evaluate", { expression, returnByValue: true, awaitPromise: true }))
-    .result?.result?.value;
-
-const results = [];
-const check = (name, pass, detail) => {
-  results.push({ name, pass });
-  console.log(`${pass ? "PASS" : "FAIL"}  ${name}${detail ? ` — ${detail}` : ""}`);
-};
+const { send, evaluate, check, guard, finish } = await connect();
 
 await send("Page.enable");
 await send("Runtime.enable");
@@ -63,6 +35,8 @@ const collapsed = await evaluate(`(() => {
     expanded: btn?.getAttribute('aria-expanded'),
     controls: btn?.getAttribute('aria-controls'),
     firstDetailsOpen: !!document.querySelector('.timeline-details[open]'),
+    // "Show 4 more roles" -> 4, so the expected total is derived, not assumed.
+    hiddenCount: Number((btn?.textContent.match(/(\\d+) more role/) ?? [])[1] ?? 0),
     // offsetHeight, not getBoundingClientRect: the rail carries a scaleY
     // transform, so a rect-based measurement reports scrub progress, not layout.
     timelineHeight: document.querySelector('.timeline').offsetHeight,
@@ -88,22 +62,35 @@ const peek = await evaluate(`(() => {
   };
 })()`);
 check("peek row exists", peek !== null);
-check("peek is clipped well below a full row", peek.height < peek.fullHeight * 0.6,
-  `${peek.height}px vs ${peek.fullHeight}px`);
-check("peek fades out", peek.masked);
-check("peek is inert and hidden from assistive tech",
-  peek.inert === true && peek.ariaHidden === "true");
+
+/*
+ * Everything below dereferences `peek`. Guarding means a missing peek row
+ * reports one FAIL instead of throwing a TypeError that aborts the script and
+ * hides every remaining check.
+ */
+if (peek) {
+  check("peek is clipped well below a full row", peek.height < peek.fullHeight * 0.6,
+    `${peek.height}px vs ${peek.fullHeight}px`);
+  check("peek fades out", peek.masked);
+  check("peek is inert and hidden from assistive tech",
+    peek.inert === true && peek.ariaHidden === "true");
+} else {
+  check("peek is clipped well below a full row", false, "no peek row to measure");
+  check("peek fades out", false, "no peek row to measure");
+  check("peek is inert and hidden from assistive tech", false, "no peek row to measure");
+}
 
 // Prove inert actually removes it from the tab order rather than just being set.
 const tabLandsInPeek = await evaluate(`(() => {
   const peekEl = document.querySelector('.timeline-item.is-peek');
+  if (!peekEl) return null;
   const focusable = peekEl.querySelector('button, a, summary, [tabindex]');
   if (!focusable) return false;
   focusable.focus();
   return peekEl.contains(document.activeElement);
 })()`);
 check("focus cannot enter the peek", tabLandsInPeek === false,
-  `${peek.focusables} focusable node(s) inside, all unreachable`);
+  peek ? `${peek.focusables} focusable node(s) inside, all unreachable` : "no peek row");
 check("button names the remaining count", /more role/.test(collapsed.label ?? ""),
   collapsed.label);
 check("button reports collapsed state", collapsed.expanded === "false");
@@ -125,7 +112,14 @@ const expanded = await evaluate(`(() => {
     detailsCount: document.querySelectorAll('.timeline-details').length,
   };
 })()`);
-check("expanded reveals every role", expanded.items === 6, `${expanded.items} items`);
+/*
+ * Counts come from the button label, not a hardcoded 6. verify-journey.mjs was
+ * made count-agnostic in 838fa4c after a sixth milestone broke it; this script
+ * never got the same treatment and would fail on any experience.js edit.
+ */
+const expectedRoles = collapsed.hiddenCount + 2; // two shown in full + the rest
+check("expanded reveals every role", expanded.items === expectedRoles,
+  `${expanded.items} of an expected ${expectedRoles}`);
 check("button flips to collapse", /fewer/.test(expanded.label ?? ""), expanded.label);
 check("button reports expanded state", expanded.expanded === "true");
 check("timeline layout actually grew",
@@ -133,8 +127,9 @@ check("timeline layout actually grew",
   `${collapsed.timelineHeight}px -> ${expanded.timelineHeight}px`);
 check("no revealed card left invisible", expanded.minCardOpacity > 0.9,
   `min opacity ${expanded.minCardOpacity}`);
-check("every role keeps its highlight disclosure", expanded.detailsCount === 6,
-  `${expanded.detailsCount} disclosures`);
+check("every role keeps its highlight disclosure",
+  expanded.detailsCount === expectedRoles,
+  `${expanded.detailsCount} disclosures for ${expectedRoles} roles`);
 check("expanding removes the peek treatment",
   (await evaluate(`document.querySelectorAll('.timeline-item.is-peek').length`)) === 0);
 check("no expanded row is inert",
@@ -165,7 +160,4 @@ check("every revealed dot lights up", scrubbed.lit === scrubbed.total,
 check("rail scrubs to full over the expanded list", scrubbed.railScaleY > 0.95,
   `scaleY ${scrubbed.railScaleY}`);
 
-const failed = results.filter((r) => !r.pass);
-console.log(`\n${results.length - failed.length}/${results.length} checks passed`);
-ws.close();
-process.exit(failed.length ? 1 : 0);
+process.exit(finish() ? 0 : 1);

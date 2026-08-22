@@ -26,6 +26,18 @@ export function isHorizontalWheel(deltaX, deltaY) {
 }
 
 /**
+ * Signed distance of a card from the centre, including the live drag preview.
+ *
+ * dragOffset is ADDED, not subtracted: it is dx / DRAG_DIVISOR, so a leftward
+ * drag is negative and must push cards left to travel with the finger. This
+ * lived inline in Journey.jsx with the wrong sign, which no unit test could
+ * reach.
+ */
+export function cardDistance(cardIndex, activeIndex, dragOffset = 0) {
+  return cardIndex - activeIndex + dragOffset;
+}
+
+/**
  * Coverflow placement. `distance` is the signed offset from the active index
  * and may be fractional while dragging.
  */

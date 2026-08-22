@@ -93,7 +93,7 @@
   padding: var(--space-5) var(--space-6);
 }
 
-/* Text column on the left, optional photo pinned top-right */
+/* Text column; the head row kept for its spacing */
 .timeline-card-head {
   display: flex;
   align-items: flex-start;
@@ -107,30 +107,7 @@
   flex: 1 1 auto;
 }
 
-.timeline-photo {
-  flex-shrink: 0;
-  width: 108px;
-  /* Fixed ratio reserves space before the image loads (no layout shift) */
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  background-color: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-}
-
-.timeline-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform var(--dur-slow) var(--ease-out);
-}
-
-.timeline-item:hover .timeline-photo img {
-  transform: scale(1.06);
-}
-
-.timeline-period {
+.timeline-item:hover .timeline-period {
   display: inline-block;
   margin-bottom: var(--space-3);
   padding: var(--space-1) var(--space-3);
@@ -300,7 +277,4 @@
     gap: var(--space-4);
   }
 
-  .timeline-photo {
-    width: 76px;
-  }
 }

@@ -78,12 +78,6 @@ function Experience() {
           }
         );
 
-        /*
-         * The rail scrub ends at "bottom 60%" of .timeline and each dot has its
-         * own trigger, so expanding the list changes every measurement. Refresh
-         * after the new rows are in the DOM or the rail scrubs against stale
-         * geometry and the revealed dots never light.
-         */
         ScrollTrigger.refresh();
       });
 
@@ -135,17 +129,6 @@ function Experience() {
                     <p className="timeline-org">{role.org}</p>
                     <p className="timeline-location">{role.location}</p>
                   </div>
-
-                  {/* Optional — roles without a photo render nothing here */}
-                  {role.photo && (
-                    <figure className="timeline-photo">
-                      <img
-                        src={role.photo}
-                        alt={role.photoAlt ?? `${role.role} at ${role.org}`}
-                        loading="lazy"
-                      />
-                    </figure>
-                  )}
                 </div>
 
                 {/* Collapsed by default past the first role, so the whole

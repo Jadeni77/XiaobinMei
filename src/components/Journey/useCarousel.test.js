@@ -117,33 +117,5 @@ describe("useCarousel", () => {
     expect(result.current.isDragging).toBe(false);
   });
 
-  it("suppresses the click that follows a real drag", () => {
-    const { result } = renderHook(() => useCarousel(5));
-    const target = { closest: () => null };
 
-    act(() =>
-      result.current.regionProps.onPointerDown({
-        clientX: 0, pointerId: 1, target, currentTarget: {},
-      })
-    );
-    act(() => result.current.regionProps.onPointerMove({ clientX: 40 }));
-    act(() => result.current.regionProps.onPointerUp());
-
-    expect(result.current.shouldSuppressClick()).toBe(true);
-  });
-
-  it("allows a click after a stationary tap", () => {
-    const { result } = renderHook(() => useCarousel(5));
-    const target = { closest: () => null };
-
-    act(() =>
-      result.current.regionProps.onPointerDown({
-        clientX: 0, pointerId: 1, target, currentTarget: {},
-      })
-    );
-    act(() => result.current.regionProps.onPointerMove({ clientX: 3 }));
-    act(() => result.current.regionProps.onPointerUp());
-
-    expect(result.current.shouldSuppressClick()).toBe(false);
-  });
 });

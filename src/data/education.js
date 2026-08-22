@@ -102,7 +102,7 @@ function academicYear(term) {
 export const courseworkByYear = coursework.reduce((groups, term) => {
   const year = academicYear(term.term);
   const group = groups.find((candidate) => candidate.year === year);
-  const entry = { ...term, courseTotal: term.courses.length };
+  const entry = { ...term };
 
   if (group) {
     group.terms.push(entry);

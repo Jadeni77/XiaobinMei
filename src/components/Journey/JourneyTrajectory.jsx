@@ -43,9 +43,10 @@ function JourneyTrajectory({ milestones, index }) {
   const pointGap = isNarrow ? POINT_GAP_NARROW : POINT_GAP_WIDE;
 
   const count = milestones.length;
+  const span = Math.max(1, count - 1);
   const points = milestones.map((_, i) => ({
     x: i * pointGap,
-    y: bandHeight - 34 - (i / (count - 1)) * (bandHeight - 78),
+    y: bandHeight - 34 - (i / span) * (bandHeight - 78),
   }));
   const path = curvePath(points);
 

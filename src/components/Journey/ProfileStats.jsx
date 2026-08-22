@@ -7,7 +7,7 @@ import {
   GraduationCapIcon,
   MapPinIcon,
 } from "../Icons";
-import { courseCount, degree, workTermCount } from "../../data/education";
+import { courseCount, degree } from "../../data/education";
 import { experience } from "../../data/experience";
 import { site } from "../../data/site";
 
@@ -27,8 +27,7 @@ function ProfileStats() {
     },
     {
       icon: BriefcaseIcon,
-      // Co-ops and internships are work experience, not coursework.
-      value: experience.length + workTermCount,
+      value: experience.length,
       label: "Roles, co-ops & programs",
       href: "#experience",
     },
