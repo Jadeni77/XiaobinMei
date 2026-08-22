@@ -1,3 +1,10 @@
+/**
+ * Fixed header: brand, section links with scroll-spy, social icons, and a
+ * mobile drawer.
+ *
+ * Links come from `navSections`, so adding a section there updates the navbar,
+ * the scroll-spy target list, and the footer together.
+ */
 import { useEffect, useState } from "react";
 import "../components_css/NavBar.css";
 import { navSections, site } from "../data/site";

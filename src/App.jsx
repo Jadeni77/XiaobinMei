@@ -1,3 +1,10 @@
+/**
+ * Page shell: the skip link, navbar, the six sections in reading order, footer.
+ *
+ * Section order here is the order visitors scroll through, and it must match
+ * `navSections` in data/site.js, which drives both the navbar scroll-spy and
+ * the footer links.
+ */
 import { useEffect } from "react";
 import NavBar from "./components/NavBar";
 import Hero from "./components/Hero";

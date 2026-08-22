@@ -1,3 +1,13 @@
+/**
+ * Above-the-fold introduction: status pill, cycling name, role, blurb, CTAs,
+ * portrait.
+ *
+ * The name cycles through the three spellings in `heroNames` with a
+ * per-character SplitText animation. The span is keyed on the current name on
+ * purpose: SplitText.revert() restores the innerHTML it captured at split time,
+ * so reusing one node let it overwrite the name React had just committed and
+ * the heading silently froze on the first spelling.
+ */
 import { useEffect, useRef, useState } from "react";
 import "../components_css/Hero.css";
 import LinkedIn from "../assets/aboutimage/linkedin.jpeg";

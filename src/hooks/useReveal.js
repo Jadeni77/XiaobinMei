@@ -1,3 +1,13 @@
+/**
+ * Scroll-into-view helpers.
+ *
+ * useReveal gives a one-shot "has been seen" flag for entrance animations and
+ * short-circuits to visible under prefers-reduced-motion. Its threshold is
+ * worth tuning per section: IntersectionObserver's ratio caps at
+ * viewportHeight / sectionHeight, so a tall section can never reach a high one.
+ *
+ * usePrefersReducedMotion tracks the media query and updates if it changes.
+ */
 import { useEffect, useRef, useState } from "react";
 
 /**

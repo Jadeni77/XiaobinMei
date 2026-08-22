@@ -1,3 +1,15 @@
+/**
+ * Headless carousel input.
+ *
+ * Owns the active index and every way of changing it — buttons, pips, keyboard,
+ * pointer drag, horizontal wheel — and knows nothing about photos, curves or
+ * GSAP, which keeps the visual components presentational.
+ *
+ * Two behaviours are load-bearing for accessibility: arrow keys bind to the
+ * region via regionProps rather than to window, and the wheel is only claimed
+ * when the gesture is clearly horizontal so vertical page scrolling is never
+ * trapped.
+ */
 import { useCallback, useRef, useState } from "react";
 import {
   DRAG_DIVISOR,

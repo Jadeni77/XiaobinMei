@@ -1,3 +1,9 @@
+/**
+ * Portfolio projects and the categories the filter offers.
+ *
+ * `blurb` is the short line shown on the card; `description` is the longer text
+ * behind "Read more". A project with only a description shows it directly.
+ */
 import CalendarImage from "../assets/projectimage/calendar.png";
 import MyWeb from "../assets/projectimage/myweb.png";
 import NEUBookstore from "../assets/projectimage/bookstore.png";

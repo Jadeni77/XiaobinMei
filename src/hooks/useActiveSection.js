@@ -1,3 +1,11 @@
+/**
+ * Scroll-spy for the navbar.
+ *
+ * Returns the id of the section currently occupying the top of the viewport.
+ * Picks the last section whose top has passed the nav line rather than using
+ * IntersectionObserver ratios, which get ambiguous when a short section and a
+ * tall one are on screen together.
+ */
 import { useEffect, useState } from "react";
 
 /**

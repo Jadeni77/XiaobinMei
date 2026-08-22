@@ -1,3 +1,12 @@
+/**
+ * Four at-a-glance facts below the Journey carousel, migrated from the deleted
+ * About section.
+ *
+ * Counts derive from the data files, but note that experience.js already
+ * contains the co-op and internship that education.js also records as work
+ * terms — adding both double-counts them and contradicts the section this tile
+ * links to.
+ */
 import "../../components_css/ProfileStats.css";
 import CountUp from "../CountUp";
 import {

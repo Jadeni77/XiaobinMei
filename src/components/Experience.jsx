@@ -1,3 +1,15 @@
+/**
+ * Professional record: a scroll-scrubbed timeline of roles, each with its
+ * highlights behind a disclosure.
+ *
+ * Two roles show in full, a third renders clipped and fading to signal the list
+ * continues, and a button reveals the rest. Expanding changes the timeline
+ * height that the rail scrub and every dot trigger are measured against, so the
+ * GSAP block is keyed on the expanded flag and calls ScrollTrigger.refresh().
+ *
+ * Keep this section third-person and factual. The personal register belongs in
+ * Journey; blurring them is what made the old About section redundant.
+ */
 import { useState, useRef } from "react";
 import "../components_css/Experience.css";
 import { experience } from "../data/experience";
