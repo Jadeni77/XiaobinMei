@@ -79,7 +79,7 @@ function NavBar() {
           >
             <LinkedinIcon width="18" height="18" />
           </a>
-          <a href="#footer" className="btn btn-primary btn-small navbar-cta">
+          <a href="#contact" className="btn btn-primary btn-small navbar-cta">
             Get in touch
           </a>
         </div>
