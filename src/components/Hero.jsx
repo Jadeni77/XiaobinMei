@@ -194,7 +194,7 @@ function Hero() {
               <FileTextIcon className="btn-icon" />
               Résumé
             </a>
-            <a href="#footer" className="btn btn-secondary">
+            <a href="#contact" className="btn btn-secondary">
               <MailIcon className="btn-icon" />
               Contact
             </a>
