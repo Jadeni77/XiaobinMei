@@ -17,6 +17,14 @@ const base = {
   focusable: false,
 };
 
+export function EyeIcon(props) {
+  return <svg {...base} {...props}><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" /><circle cx="12" cy="12" r="3" /></svg>;
+}
+
+export function CameraIcon(props) {
+  return <svg {...base} {...props}><path d="M8 5 9.5 3h5L16 5h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" /><circle cx="12" cy="12" r="4" /></svg>;
+}
+
 export function GithubIcon(props) {
   return (
     <svg
