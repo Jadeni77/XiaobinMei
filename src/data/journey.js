@@ -1,3 +1,26 @@
+/**
+ * Milestones for the My Journey carousel.
+ *
+ * ORDERED OLDEST-FIRST, unlike experience.js which is newest-first. The
+ * trajectory curve rises left to right through time, so reversing this breaks
+ * the backdrop. A test asserts the order; do not "fix" it.
+ *
+ * Journey is the personal register: what a year felt like and what was learned.
+ * Responsibilities, metrics and technologies belong in experience.js. Keeping
+ * them apart is the whole reason both sections exist.
+ *
+ * Fields:
+ *   accent  a step name from journeyAccents.js, not a hex. Five cool steps are
+ *           available; avoid giving adjacent milestones the same one or the
+ *           theme does not visibly change between them.
+ *   alt     required on every photo. These images carry meaning, so a generic
+ *           fallback would be worse than useless to a screen-reader user.
+ *   focus   optional object-position anchor for a photo that crops badly, e.g.
+ *           focus: "center top". Photos fill a landscape slot biased upward,
+ *           so portrait sources lose roughly half their height.
+ *
+ * Photos live in src/assets/journeyImage/<event>/.
+ */
 import oasis from "../assets/aboutimage/oasis.jpg";
 import bookstore from "../assets/projectimage/bookstore.png";
 

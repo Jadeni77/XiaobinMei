@@ -1,3 +1,12 @@
+/**
+ * The SVG backdrop: a curve plotted through the milestones, solid up to the
+ * active point and dashed beyond it, so the past is drawn and the future
+ * projected.
+ *
+ * The viewBox is in CSS pixel space with preserveAspectRatio="xMidYMid meet".
+ * A unitless viewBox with preserveAspectRatio="none" stretches the axes
+ * independently and renders every plotted point as an ellipse.
+ */
 import { useEffect, useRef, useState } from "react";
 import "../../components_css/JourneyTrajectory.css";
 

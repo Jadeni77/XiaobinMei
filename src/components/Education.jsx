@@ -1,3 +1,11 @@
+/**
+ * Degree banner plus coursework, grouped into an aligned ledger by academic
+ * year.
+ *
+ * Rows rather than cards: a term with one course beside a term with four left
+ * large voids and read as unorganised. Co-ops and internships are tinted as
+ * work terms and excluded from the course count.
+ */
 import "../components_css/Education.css";
 import {
   courseworkByYear,

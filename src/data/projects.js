@@ -1,5 +1,5 @@
+/** Project content. See PROJECTS.md for galleries, highlights and optional sections. */
 import CalendarImage from "../assets/projectimage/calendar.png";
-import MyWeb from "../assets/projectimage/myweb.png";
 import NEUBookstore from "../assets/projectimage/bookstore.png";
 import LightEmAll from "../assets/projectimage/LightEmAll.png";
 import Connections from "../assets/projectimage/Connections.png";
@@ -22,9 +22,14 @@ export const projects = [
     description: 
       "Built with a Spring Boot backend and React frontend, it handles real-time game state, wave progression, and unit placement logic, with PostgreSQL persisting player progress and match history.",
     category: ["Web", "Game Development"],
-    technologies: ["React", "Java", "Git", "PostgreSQL", "Docker"],
+    highlights: [
+      "Collaborated with a partner to develop a full-stack tower defense game with 20+ progressively challenging levels.",
+      "Implemented JWT-based user authentication and persistent PostgreSQL save states so players can resume progress across sessions.",
+      "Built animation and audio systems for unit attacks, movement, and death sequences, managing 110+ sprite sheets and synchronized sound effects.",
+    ],
+    technologies: ["React", "Spring Boot", "Java", "Git", "PostgreSQL", "Docker"],
     github: "https://github.com/Jadeni77/The_Invasion",
-    projectImage: Invasion,
+    images: [{ src: Invasion, alt: "The Invasion tower defense game" }],
   },
   {
     id: 2,
@@ -37,7 +42,7 @@ export const projects = [
     technologies: ["Java", "Swing", "Git"],
     course: "Object-Oriented Design (CS 3500)",
     github: "https://github.com/Jadeni77/Calendar/tree/main",
-    projectImage: CalendarImage,
+    images: [{ src: CalendarImage, alt: "Calendar application interface" }],
   },
   {
     id: 3,
@@ -49,7 +54,7 @@ export const projects = [
     category: ["Web"],
     technologies: ["React", "Python", "Git"],
     github: "https://github.com/oasis-2025-charles-alpha/app",
-    projectImage: NEUBookstore,
+    images: [{ src: NEUBookstore, alt: "NEU Bookstore web application" }],
   },
   {
     id: 4,
@@ -62,7 +67,7 @@ export const projects = [
     technologies: ["Java"],
     course: "Fundamentals of Computer Science II",
     github: "https://github.com/Jadeni77/LightEmAll",
-    projectImage: LightEmAll,
+    images: [{ src: LightEmAll, alt: "LightEmAll wire-rotation puzzle" }],
   },
   {
     id: 5,
@@ -75,6 +80,6 @@ export const projects = [
     technologies: ["Java"],
     course: "Fundamentals of Computer Science II",
     github: "https://github.com/Jadeni77/Connections",
-    projectImage: Connections,
+    images: [{ src: Connections, alt: "Connections word-grouping game" }],
   },
 ];

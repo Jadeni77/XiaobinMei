@@ -1,3 +1,13 @@
+/**
+ * Degree, coursework by term, and the counts derived from them.
+ *
+ * Entries typed "coop" or "intern" are work terms, not classes: they get the
+ * accent treatment and are excluded from courseCount. They are also recorded as
+ * roles in experience.js, so counting both sources double-counts them.
+ *
+ * courseworkByYear groups terms into Northeastern academic years, which run
+ * Fall through Summer.
+ */
 export const degree = {
   credential: "B.S. Computer Science and Mathematics",
   school: "Northeastern University",
@@ -13,7 +23,7 @@ export const coursework = [
     courses: [
       {  code: "CS4535", name: "Professional Practicum Capstone"},
       {  code: "CS3800", name: "Theory of Computation"},
-      {  code: "MATH4025", name: "Applied Mathematics Capstone"},
+      {  code: "CS3200", name: "Database Design"},
       {  code: "MATH4570", name: "Matrix Methods in Data Analysis and Machine Learning"},
     ]
   },

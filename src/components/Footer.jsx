@@ -1,3 +1,9 @@
+/**
+ * Contact prompt, navigation echo, social links, and copyright.
+ *
+ * Email addresses carry a <wbr> at the "@" so a long address wraps at a
+ * sensible boundary instead of splitting the domain.
+ */
 import "../components_css/Footer.css";
 import { navSections, site } from "../data/site";
 import {

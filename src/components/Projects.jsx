@@ -1,6 +1,19 @@
+/**
+ * Filterable project grid.
+ *
+ * Filtering is a two-phase crossfade: the grid fades out with every card still
+ * present, the filter swaps while it is invisible so the reflow is hidden, then
+ * the new cards fade up staggered. Deliberately no positional animation — FLIP
+ * made cards travel the full width and height of the grid, which read as
+ * sliding.
+ *
+ * The container height is animated because the row count changes the instant
+ * React commits, and the CTA below would otherwise snap up the page.
+ */
 import { useRef, useState } from "react";
 import "../components_css/Projects.css";
 import ProjectCard from "./ProjectCard";
+import ProjectDetail from "./ProjectDetail";
 import { projects, projectCategories } from "../data/projects";
 import { site } from "../data/site";
 import { gsap, motion, prefersReducedMotion, useGSAP } from "../lib/gsap";
@@ -12,6 +25,8 @@ const matchesCategory = (project, category) =>
 
 function Projects() {
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedProject, setSelectedProject] = useState(null);
+  const projectTrigger = useRef(null);
   const gridRef = useRef(null);
   // Grid height before the re-layout, so the container can settle smoothly
   // instead of snapping when the row count changes.
@@ -197,17 +212,17 @@ function Projects() {
           {visibleCount} {visibleCount === 1 ? "project" : "projects"} shown
         </p>
 
-        {/*
-          Every card stays mounted and filtered-out ones get display: none.
-          Unmounting them would remove the nodes FLIP needs to animate out,
-          and display: none also drops them from the accessibility tree.
-        */}
+        {/* Hidden cards stay mounted for filtering, outside the accessibility tree. */}
         <div className="projects-grid" ref={gridRef}>
           {projects.map((project) => (
             <ProjectCard
               key={project.id}
               project={project}
               hidden={!matchesCategory(project, selectedCategory)}
+              onView={(event) => {
+                projectTrigger.current = event.currentTarget;
+                setSelectedProject(project);
+              }}
             />
           ))}
         </div>
@@ -231,6 +246,14 @@ function Projects() {
           </a>
         </div>
       </div>
+      {selectedProject && (
+        <ProjectDetail
+          key={selectedProject.id}
+          project={selectedProject}
+          returnFocusRef={projectTrigger}
+          onClose={() => setSelectedProject(null)}
+        />
+      )}
     </section>
   );
 }

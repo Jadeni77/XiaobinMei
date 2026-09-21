@@ -1,0 +1,65 @@
+/** Browser QA: run Vite, launch headless Chrome with CDP, then set APP_URL/CDP_PORT. */
+import { writeFile } from 'node:fs/promises';
+import { connect, sleep } from './cdp.mjs';
+
+const APP = process.env.APP_URL ?? 'http://127.0.0.1:5174/';
+const { send, evaluate, check, finish } = await connect();
+await send('Page.enable');
+await send('Runtime.enable');
+await send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 900, deviceScaleFactor: 1, mobile: false });
+await send('Page.navigate', { url: APP });
+await sleep(1800);
+await evaluate(`document.documentElement.style.scrollBehavior='auto'; document.getElementById('projects').scrollIntoView({behavior:'instant'})`);
+await sleep(1000);
+check('five project cards render', await evaluate(`document.querySelectorAll('.project-card').length === 5`));
+await writeFile('/private/tmp/projects-desktop.png', Buffer.from((await send('Page.captureScreenshot', {format:'png'})).result.data, 'base64'));
+const startY = await evaluate('window.scrollY');
+await evaluate(`document.querySelector('.project-thumb').click()`);
+await sleep(200);
+check('native modal opens with visible initial focus', await evaluate(`document.querySelector('dialog').matches(':modal') && document.activeElement.classList.contains('project-back')`));
+check('page scroll is locked', await evaluate(`document.body.style.overflow === 'hidden'`));
+check('full description and highlights are available', await evaluate(`document.querySelector('.project-detail-description').textContent.includes('Spring Boot') && document.querySelectorAll('.project-highlights li').length === 3`));
+check('single image hides redundant arrows', await evaluate(`!document.querySelector('.project-gallery-arrow')`));
+await evaluate(`document.querySelector('.filter-btn').focus()`);
+check('background controls are inert', await evaluate(`document.querySelector('dialog').contains(document.activeElement)`));
+await writeFile('/private/tmp/project-detail-desktop.png', Buffer.from((await send('Page.captureScreenshot', {format:'png'})).result.data, 'base64'));
+await send('Input.dispatchKeyEvent', {type:'keyDown',key:'Escape',code:'Escape',windowsVirtualKeyCode:27});
+await send('Input.dispatchKeyEvent', {type:'keyUp',key:'Escape',code:'Escape',windowsVirtualKeyCode:27});
+await sleep(100);
+check('Escape restores card focus and page position', await evaluate(`!document.querySelector('dialog') && document.activeElement.classList.contains('project-thumb') && Math.abs(window.scrollY - ${startY}) < 2 && document.body.style.overflow !== 'hidden'`));
+await evaluate(`[...document.querySelectorAll('.filter-btn')].find(b=>b.textContent.startsWith('Web')).click()`);
+await sleep(1100);
+check('category filter remains usable', await evaluate(`document.querySelectorAll('.project-card:not(.project-card--hidden)').length === 2`));
+await evaluate(`document.querySelector('.project-title button').click()`);
+await sleep(100);
+await evaluate(`document.querySelector('.project-close').click()`);
+check('close restores title-button focus', await evaluate(`document.activeElement.matches('.project-title button')`));
+
+// Exercise a real multi-image project without adding invented content to portfolio data.
+await evaluate(`(async()=>{
+  const {projects}=await import('/src/data/projects.js');
+  window.__originalProjectImages = projects[0].images;
+  projects[0].images=[...projects[0].images,{...projects[1].images[0],caption:'Gallery QA caption'}];
+  document.querySelector('.project-thumb').click();
+})()`);
+await sleep(100);
+await evaluate(`document.querySelector('[aria-label="Next image"]').click()`);
+check('next image updates source, caption and count', await evaluate(`document.querySelector('.project-gallery-stage img').alt === 'Calendar application interface' && document.querySelector('figcaption').textContent === 'Gallery QA caption' && document.querySelector('.project-gallery-pagination [role="status"]').textContent === '2 / 2'`));
+await evaluate(`document.querySelector('[aria-label="Next image"]').focus()`);
+await send('Input.dispatchKeyEvent', {type:'keyDown',key:'ArrowRight',code:'ArrowRight',windowsVirtualKeyCode:39});
+await send('Input.dispatchKeyEvent', {type:'keyUp',key:'ArrowRight',code:'ArrowRight',windowsVirtualKeyCode:39});
+check('gallery keyboard navigation wraps', await evaluate(`document.querySelector('.project-gallery-pagination [role="status"]').textContent === '1 / 2'`));
+await evaluate(`document.querySelectorAll('.project-gallery-thumbnails button')[1].click()`);
+check('thumbnail selection updates full-size link', await evaluate(`document.querySelector('.project-image-original').href === document.querySelector('.project-gallery-stage img').src`));
+await send('Emulation.setDeviceMetricsOverride', {width:375,height:812,deviceScaleFactor:1,mobile:true});
+await send('Emulation.setEmulatedMedia', {features:[{name:'prefers-color-scheme',value:'dark'},{name:'prefers-reduced-motion',value:'reduce'}]});
+await sleep(250);
+check('mobile dialog fits without horizontal overflow', await evaluate(`(()=>{const d=document.querySelector('dialog');const r=d.getBoundingClientRect();return d.scrollWidth<=d.clientWidth+1 && r.left>=0 && r.right<=375;})()`));
+await writeFile('/private/tmp/project-detail-mobile.png', Buffer.from((await send('Page.captureScreenshot', {format:'png'})).result.data, 'base64'));
+await evaluate(`document.querySelector('.project-back').click()`);
+await evaluate(`(async()=>{const {projects}=await import('/src/data/projects.js');projects[0].images=window.__originalProjectImages;document.getElementById('projects').scrollIntoView({behavior:'instant'});})()`);
+check('mobile project grid fits', await evaluate(`document.querySelector('.projects-grid').scrollWidth <= document.querySelector('.projects-grid').clientWidth + 1`));
+await evaluate(`[...document.querySelectorAll('.filter-btn')].find(b=>b.textContent.startsWith('All')).click()`);
+await sleep(150);
+check('reduced-motion filter shows all projects', await evaluate(`document.querySelectorAll('.project-card:not(.project-card--hidden)').length === 5`));
+process.exit(finish() ? 0 : 1);

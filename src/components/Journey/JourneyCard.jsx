@@ -1,3 +1,14 @@
+/**
+ * One milestone: a lead photo with a thumbnail rail, plus year, title and story.
+ *
+ * The centre deck advances its photos on a timer; clicking a thumbnail stops
+ * that deck for good, and hover or keyboard focus pauses it while attention is
+ * on the card (WCAG 2.2.2 wants a discoverable pause).
+ *
+ * Off-centre cards are `inert`, which keeps Tab out of a card you cannot see.
+ * That also swallows clicks, so there is deliberately no click-to-select here —
+ * the pips, arrows, drag and keyboard cover navigation.
+ */
 import { useEffect, useState } from "react";
 import "../../components_css/JourneyCard.css";
 import { cardTransform } from "./carouselMath";

@@ -1,3 +1,10 @@
+/**
+ * Technology chips grouped by category.
+ *
+ * The reveal threshold is lowered to 0.05 because IntersectionObserver's ratio
+ * caps at viewportHeight / sectionHeight; this section is tall enough that the
+ * default 0.15 can be unreachable, which would strand every chip at opacity 0.
+ */
 import "../components_css/Skills.css";
 import { skillCategories } from "../data/skills";
 import { useReveal } from "../hooks/useReveal";
