@@ -23,7 +23,7 @@ export const coursework = [
     courses: [
       {  code: "CS4535", name: "Professional Practicum Capstone"},
       {  code: "CS3800", name: "Theory of Computation"},
-      {  code: "MATH4025", name: "Applied Mathematics Capstone"},
+      {  code: "CS3200", name: "Database Design"},
       {  code: "MATH4570", name: "Matrix Methods in Data Analysis and Machine Learning"},
     ]
   },
