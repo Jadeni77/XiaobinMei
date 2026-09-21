@@ -1,7 +1,12 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import Contact from "./Contact";
 import { site } from "../data/site";
+
+/** FormSubmit sends the visitor back here only after a successful send. */
+function returnFromSend() {
+  window.history.replaceState({}, "", "/?sent=1#contact");
+}
 
 function fillRequiredFields() {
   fireEvent.change(screen.getByLabelText("Your name"), {
@@ -16,6 +21,10 @@ function fillRequiredFields() {
 }
 
 describe("Contact", () => {
+  beforeEach(() => {
+    window.history.replaceState({}, "", "/");
+  });
+
   it("requires a name, valid reply email, and message before submission", () => {
     render(<Contact />);
     const form = screen.getByRole("form", { name: "Send a message" });
@@ -71,18 +80,75 @@ describe("Contact", () => {
     expect(payload.get("_subject")).toContain("xiaobinmei.com");
   });
 
-  it("retains hosted spam protection and avoids a premature success redirect", () => {
+  it("retains hosted spam protection", () => {
     render(<Contact />);
     const form = screen.getByRole("form", { name: "Send a message" });
     const payload = new FormData(form);
     const honeypot = form.querySelector('[name="_honey"]');
 
     expect(payload.get("_captcha")).not.toBe("false");
-    expect(payload.has("_next")).toBe(false);
     expect(payload.get("_honey")).toBe("");
     expect(honeypot).toHaveAttribute("tabindex", "-1");
     expect(honeypot.parentElement).toHaveAttribute("aria-hidden", "true");
     expect(screen.getByText(/spam check on the next page/)).toBeInTheDocument();
+  });
+
+  it("returns the visitor to this site instead of the provider's page", () => {
+    render(<Contact />);
+    const payload = new FormData(
+      screen.getByRole("form", { name: "Send a message" })
+    );
+
+    expect(payload.get("_next")).toBe(
+      `${window.location.origin}/?sent=1#contact`
+    );
+  });
+
+  it("confirms the send in place of the form when the visitor returns", () => {
+    returnFromSend();
+    render(<Contact />);
+
+    expect(screen.getByRole("status")).toHaveTextContent(/message sent/i);
+    expect(
+      screen.queryByRole("form", { name: "Send a message" })
+    ).not.toBeInTheDocument();
+  });
+
+  it("shows no confirmation on an ordinary visit", () => {
+    render(<Contact />);
+
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("form", { name: "Send a message" })
+    ).toBeInTheDocument();
+  });
+
+  it("clears the sent marker so a reload does not repeat the confirmation", () => {
+    returnFromSend();
+    render(<Contact />);
+
+    expect(window.location.search).toBe("");
+    expect(window.location.hash).toBe("#contact");
+  });
+
+  it("moves focus to the confirmation so it is announced on arrival", () => {
+    returnFromSend();
+    render(<Contact />);
+
+    expect(screen.getByRole("status")).toHaveFocus();
+  });
+
+  it("restores an empty form when the visitor sends another message", () => {
+    returnFromSend();
+    render(<Contact />);
+
+    fireEvent.click(screen.getByRole("button", { name: /send another/i }));
+
+    expect(
+      screen.getByRole("form", { name: "Send a message" })
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText("Your name")).toHaveValue("");
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 
   it("offers direct email if the visitor cannot use the hosted form", () => {

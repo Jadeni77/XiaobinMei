@@ -121,6 +121,29 @@
   display: none;
 }
 
+/* Shown in place of the form after FormSubmit redirects a sender back. */
+.contact-confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-6);
+}
+
+.contact-confirmation > svg {
+  color: var(--accent);
+}
+
+.contact-confirmation h3 {
+  font-size: var(--text-xl);
+}
+
+.contact-confirmation p {
+  max-width: 44ch;
+  color: var(--fg-muted);
+  line-height: var(--leading-relaxed);
+}
+
 .contact-submit {
   align-self: flex-start;
 }
@@ -137,8 +160,13 @@
 }
 
 @media (max-width: 560px) {
-  .contact-form {
+  .contact-form,
+  .contact-confirmation {
     padding: var(--space-5);
+  }
+
+  .contact-confirmation .btn {
+    width: 100%;
   }
 
   .contact-form-row {

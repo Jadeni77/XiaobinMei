@@ -22,6 +22,7 @@ await evaluate(`document.querySelector('#contact-name').value='Visitor';document
 check('invalid email blocks submission', await evaluate(`window.__contactSubmitCount === 0 && document.activeElement.id === 'contact-email'`));
 await evaluate(`document.querySelector('#contact-email').value='visitor@example.com';document.querySelector('#contact-subject').value='Project collaboration';document.querySelector('.contact-submit').click()`);
 check('valid form prepares expected fields without sending', await evaluate(`window.__contactSubmitCount === 1 && window.__contactPayload.email === 'visitor@example.com' && window.__contactPayload.subject === 'Project collaboration' && window.__contactPayload.message === 'A local browser check.'`));
+check('submission returns to this origin, not the provider', await evaluate(`window.__contactPayload._next === location.origin + '/?sent=1#contact'`));
 check('CAPTCHA retained and honeypot excluded from tab order', await evaluate(`!document.querySelector('[name="_captcha"]') && document.querySelector('[name="_honey"]').tabIndex === -1 && getComputedStyle(document.querySelector('.contact-honeypot')).display === 'none'`));
 await evaluate(`document.querySelector('#contact-name').focus()`);
 await send('Input.dispatchKeyEvent',{type:'keyDown',key:'Tab',code:'Tab',windowsVirtualKeyCode:9});
@@ -37,4 +38,17 @@ await sleep(200);
 check('mobile form fits without horizontal overflow', await evaluate(`document.querySelector('.contact-grid').scrollWidth <= document.querySelector('.contact-grid').clientWidth + 1 && document.documentElement.scrollWidth <= 375`));
 check('mobile fields have usable touch targets', await evaluate(`[...document.querySelectorAll('.contact-field input')].every(el=>el.getBoundingClientRect().height >= 44)`));
 await writeFile('/private/tmp/contact-mobile.png',Buffer.from((await send('Page.captureScreenshot',{format:'png'})).result.data,'base64'));
+
+// Arriving back from FormSubmit: the marker stands in for the real redirect.
+await send('Emulation.setDeviceMetricsOverride',{width:1280,height:1000,deviceScaleFactor:1,mobile:false});
+await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:'light'}]});
+await send('Page.navigate',{url:APP+'?sent=1#contact'});
+await sleep(1800);
+check('return from a send confirms in place of the form', await evaluate(`!!document.querySelector('.contact-confirmation') && !document.querySelector('.contact-form') && document.querySelector('.contact-confirmation').getAttribute('role') === 'status'`));
+check('confirmation takes focus and drops the marker from the URL', await evaluate(`document.activeElement === document.querySelector('.contact-confirmation') && location.search === '' && location.hash === '#contact'`));
+check('confirmation is scrolled into view', await evaluate(`(()=>{const r=document.querySelector('.contact-confirmation').getBoundingClientRect();return r.top < innerHeight && r.bottom > 0;})()`));
+await writeFile('/private/tmp/contact-confirmation.png',Buffer.from((await send('Page.captureScreenshot',{format:'png'})).result.data,'base64'));
+await evaluate(`[...document.querySelectorAll('.contact-confirmation button')].find(b=>/send another/i.test(b.textContent)).click()`);
+await sleep(200);
+check('sending another message restores an empty form', await evaluate(`!!document.querySelector('.contact-form') && !document.querySelector('.contact-confirmation') && document.querySelector('#contact-name').value === ''`));
 process.exit(finish()?0:1);
