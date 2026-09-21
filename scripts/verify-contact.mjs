@@ -1,0 +1,54 @@
+/** Local browser checks only: intercept submit before navigation; never send mail. */
+import { writeFile } from 'node:fs/promises';
+import { connect, sleep } from './cdp.mjs';
+
+const APP = process.env.APP_URL ?? 'http://127.0.0.1:5175/';
+const { send, evaluate, check, finish } = await connect();
+await send('Page.enable');
+await send('Runtime.enable');
+await send('Emulation.setDeviceMetricsOverride', {width:1280,height:1000,deviceScaleFactor:1,mobile:false});
+await send('Emulation.setEmulatedMedia', {features:[{name:'prefers-color-scheme',value:'light'}]});
+await send('Page.navigate', {url:APP+'#contact'});
+await sleep(1800);
+await evaluate(`document.documentElement.style.scrollBehavior='auto'; document.getElementById('contact').scrollIntoView({behavior:'instant'});
+  window.__contactSubmitCount=0;
+  document.querySelector('.contact-form').addEventListener('submit', e=>{e.preventDefault();window.__contactSubmitCount++;window.__contactPayload=Object.fromEntries(new FormData(e.target));});`);
+await sleep(800);
+check('contact section and destination are wired', await evaluate(`document.querySelector('.contact-form').action === 'https://formsubmit.co/xmei59664@gmail.com' && document.querySelector('.navbar-cta').hash === '#contact'`));
+await writeFile('/private/tmp/contact-desktop.png', Buffer.from((await send('Page.captureScreenshot',{format:'png'})).result.data,'base64'));
+await evaluate(`document.querySelector('.contact-submit').click()`);
+check('empty fields block submission and focus name', await evaluate(`window.__contactSubmitCount === 0 && document.activeElement.id === 'contact-name'`));
+await evaluate(`document.querySelector('#contact-name').value='Visitor';document.querySelector('#contact-email').value='invalid';document.querySelector('#contact-message').value='A local browser check.';document.querySelector('.contact-submit').click()`);
+check('invalid email blocks submission', await evaluate(`window.__contactSubmitCount === 0 && document.activeElement.id === 'contact-email'`));
+await evaluate(`document.querySelector('#contact-email').value='visitor@example.com';document.querySelector('#contact-subject').value='Project collaboration';document.querySelector('.contact-submit').click()`);
+check('valid form prepares expected fields without sending', await evaluate(`window.__contactSubmitCount === 1 && window.__contactPayload.email === 'visitor@example.com' && window.__contactPayload.subject === 'Project collaboration' && window.__contactPayload.message === 'A local browser check.'`));
+check('submission returns to this origin, not the provider', await evaluate(`window.__contactPayload._next === location.origin + '/?sent=1#contact'`));
+check('CAPTCHA retained and honeypot excluded from tab order', await evaluate(`!document.querySelector('[name="_captcha"]') && document.querySelector('[name="_honey"]').tabIndex === -1 && getComputedStyle(document.querySelector('.contact-honeypot')).display === 'none'`));
+await evaluate(`document.querySelector('#contact-name').focus()`);
+await send('Input.dispatchKeyEvent',{type:'keyDown',key:'Tab',code:'Tab',windowsVirtualKeyCode:9});
+await send('Input.dispatchKeyEvent',{type:'keyUp',key:'Tab',code:'Tab',windowsVirtualKeyCode:9});
+check('keyboard moves through named fields', await evaluate(`document.activeElement.id === 'contact-email'`));
+await send('Emulation.setDeviceMetricsOverride',{width:1110,height:900,deviceScaleFactor:1,mobile:false});
+await sleep(100);
+check('desktop navigation fits at breakpoint', await evaluate(`(()=>{const n=document.querySelector('.navbar-nav').getBoundingClientRect();const a=document.querySelector('.navbar-actions').getBoundingClientRect();return n.right <= a.left;})()`));
+await send('Emulation.setDeviceMetricsOverride',{width:375,height:812,deviceScaleFactor:1,mobile:true});
+await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:'dark'},{name:'prefers-reduced-motion',value:'reduce'}]});
+await evaluate(`document.querySelector('.contact-form').scrollIntoView({behavior:'instant',block:'start'})`);
+await sleep(200);
+check('mobile form fits without horizontal overflow', await evaluate(`document.querySelector('.contact-grid').scrollWidth <= document.querySelector('.contact-grid').clientWidth + 1 && document.documentElement.scrollWidth <= 375`));
+check('mobile fields have usable touch targets', await evaluate(`[...document.querySelectorAll('.contact-field input')].every(el=>el.getBoundingClientRect().height >= 44)`));
+await writeFile('/private/tmp/contact-mobile.png',Buffer.from((await send('Page.captureScreenshot',{format:'png'})).result.data,'base64'));
+
+// Arriving back from FormSubmit: the marker stands in for the real redirect.
+await send('Emulation.setDeviceMetricsOverride',{width:1280,height:1000,deviceScaleFactor:1,mobile:false});
+await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:'light'}]});
+await send('Page.navigate',{url:APP+'?sent=1#contact'});
+await sleep(1800);
+check('return from a send confirms in place of the form', await evaluate(`!!document.querySelector('.contact-confirmation') && !document.querySelector('.contact-form') && document.querySelector('.contact-confirmation').getAttribute('role') === 'status'`));
+check('confirmation takes focus and drops the marker from the URL', await evaluate(`document.activeElement === document.querySelector('.contact-confirmation') && location.search === '' && location.hash === '#contact'`));
+check('confirmation is scrolled into view', await evaluate(`(()=>{const r=document.querySelector('.contact-confirmation').getBoundingClientRect();return r.top < innerHeight && r.bottom > 0;})()`));
+await writeFile('/private/tmp/contact-confirmation.png',Buffer.from((await send('Page.captureScreenshot',{format:'png'})).result.data,'base64'));
+await evaluate(`[...document.querySelectorAll('.contact-confirmation button')].find(b=>/send another/i.test(b.textContent)).click()`);
+await sleep(200);
+check('sending another message restores an empty form', await evaluate(`!!document.querySelector('.contact-form') && !document.querySelector('.contact-confirmation') && document.querySelector('#contact-name').value === ''`));
+process.exit(finish()?0:1);

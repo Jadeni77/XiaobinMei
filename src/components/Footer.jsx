@@ -31,37 +31,6 @@ function Footer() {
   return (
     <footer id="footer" className="footer">
       <div className="container">
-        {/* Contact prompt doubles as the "Get in touch" destination */}
-        <div className="footer-cta">
-          <h2 className="footer-cta-title">Let&apos;s build something.</h2>
-          <p className="footer-cta-text">
-            I&apos;m open to internships, collaborations, and a good
-            conversation about code or math. The fastest way to reach me is
-            email.
-          </p>
-          <div className="footer-cta-actions">
-            <a
-              href={`mailto:${site.schoolEmail}`}
-              className="btn btn-primary"
-            >
-              <MailIcon className="btn-icon" />
-              Email me
-            </a>
-            {socials.map((social) => (
-              <a
-                key={social.name}
-                href={social.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-secondary"
-              >
-                <social.Icon className="btn-icon" />
-                {social.name}
-              </a>
-            ))}
-          </div>
-        </div>
-
         <div className="footer-grid">
           <div className="footer-brand">
             <span className="footer-brand-mark" aria-hidden="true">

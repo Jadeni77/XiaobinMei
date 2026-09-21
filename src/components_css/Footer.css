@@ -5,33 +5,6 @@
   border-top: 1px solid var(--border);
 }
 
-/* ---- Contact prompt ---- */
-.footer-cta {
-  max-width: 46rem;
-  padding-bottom: var(--space-8);
-  margin-bottom: var(--space-8);
-  border-bottom: 1px solid var(--border);
-}
-
-.footer-cta-title {
-  font-size: var(--text-3xl);
-  font-weight: 700;
-  margin-bottom: var(--space-4);
-}
-
-.footer-cta-text {
-  font-size: var(--text-lg);
-  line-height: var(--leading-relaxed);
-  color: var(--fg-muted);
-}
-
-.footer-cta-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  margin-top: var(--space-6);
-}
-
 /* ---- Columns ---- */
 /* Contact gets the widest of the three link columns because full email
    addresses are the longest strings in the footer. */
@@ -187,15 +160,6 @@
 }
 
 @media (max-width: 560px) {
-  .footer-cta {
-    padding-bottom: var(--space-6);
-    margin-bottom: var(--space-6);
-  }
-
-  .footer-cta-actions .btn {
-    flex: 1 1 auto;
-  }
-
   .footer-grid {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-5);
